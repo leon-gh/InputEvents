@@ -90,12 +90,14 @@ public:
      * @param val 
      */
     void setStartValue(uint16_t val);
+    
     /**
      * @brief Set the underlying analog value that equates to the zero position - read from current position
      * 
      * @param val 
      */
     void setStartValue();
+    
     /**
      * @brief Used primarily for joysticks - it is very difficult to press the 
      * joystick button without moving the joystick so with this we can
@@ -104,6 +106,7 @@ public:
      * 
      */
     void setStartBoundary(uint16_t width=200);
+    
     /**
      * Again, used primarily for joysticks to create an outer 'deadzone'
      * where joysticks are notoriously inconsistent.
@@ -112,12 +115,21 @@ public:
     void setEndBoundary(uint16_t width=100);
 
     /**
+     * Set the ADC resolution for your board. Only use if your board
+     * is not the default 1023 resolution or you are testing a 5V UNO 
+     * board with a 3V3 input (675)!
+     * Note: All resolutionas are internally mapped to 0-1023.
+     */
+    void setAdcResolution(uint16_t res=1023) { adcResolution = res; }
+
+    /**
      * @brief Normally increments are set with setNumIncrements but
      * you can also set the negative and positive sides individually.
      * 
      * @param numIncr 
      */
     void setNumNegativeIncrements(uint8_t numIncr=10);
+
     /**
      * @brief Normally increments are set with setNumIncrements but
      * you can also set the negative and positive sides individually.
@@ -157,6 +169,8 @@ private:
     int16_t maxVal = 980;
     int16_t startBoundary = 50;
     int16_t endBoundary = 50;
+    int16_t adcResolution = 1023;
+
 
     int16_t negativeIncrements = 25;
     int16_t positiveIncrements = 25;

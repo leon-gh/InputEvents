@@ -2,7 +2,7 @@
 
 The `EventAnalog` class is for analog inputs - slice an analog range into configurable number of increments. 
 
-For many uses of an analog input, the 1024 'slices' of the analog value are more than is necessary. This library allows you to reduce those 1024 slices to a more managable number, calling a handler function or method each time the slice position increments up or down.
+For many uses of an analog input, the 1024 'slices' in the analog range are more than is necessary. This library allows you to reduce those 1024 slices to a more managable number, calling a handler function or method each time the slice position increments up or down.
 
 This approach also provides very effective noise reduction.
 
@@ -89,6 +89,10 @@ Used primarily for joysticks - it is very difficult to press the joystick button
 
 #### `void setEndBoundary(uint16_t)`
 Again, used primarily for joysticks to create an outer 'deadzone' where joysticks are notoriously inconsistent. Parameter is the analog value, not the increment position.
+
+#### `void setAdcResolution(uint16_t res=1023)`
+Set the ADC resolution for your board. Only use if your board is not the default 1023 resolution or you are testing a 5V UNO board with a 3V3 input (675)!
+Note: All resolutions are internally mapped to 0-1023 before being sliced.
 
 #### `void setRateLimit(uint16_t ms)`
 The EventAnalog callbacks are normally fired every time the position changes but to limit the number of events fired when the potentiometer is moved quickly, you can set a rate limit here. Note: A high rate limit may reduce responsiveness.

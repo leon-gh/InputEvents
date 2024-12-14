@@ -25,7 +25,7 @@ void EventAnalog::invoke(InputEventType et) {
 void EventAnalog::update() {
     if (!_started) {
         // Set the start position so we don't trigger an event before moving
-        readVal = analogRead(analogPin);
+        readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, 1023 ), 0, 1023);
         setReadPos(readVal - startVal);
         currentPos = readPos;
         previousPos = currentPos;
@@ -35,7 +35,7 @@ void EventAnalog::update() {
 
     if ( _enabled || _allowRead ) {
         _hasChanged = false;
-        readVal = analogRead(analogPin);
+        readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, 1023 ), 0, 1023);
         // For joysticks, resistance either side of centre can be quite 
         // different ranges so we need to slice both sides
         if ( readVal < minVal ) {
