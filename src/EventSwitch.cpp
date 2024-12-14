@@ -19,6 +19,7 @@ EventSwitch::EventSwitch(byte buttonPin)
         // the initial state
         delayMicroseconds(2000); //Delay
         bounce->attach(buttonPin, INPUT_PULLUP); //then attach button
+        currentState = bounce->read(); //Initialise switch state from Bounce2
     }
 
 

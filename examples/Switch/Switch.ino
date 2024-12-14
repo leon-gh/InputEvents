@@ -3,7 +3,7 @@
  */
 #include <EventSwitch.h>
 
-const uint8_t switchPin = 18;;   //Change to suit your wiring
+const uint8_t switchPin = 2;   //Change to suit your wiring
 
 /**
  * Utility function to print the switch events to Serial.
@@ -52,6 +52,12 @@ void setup() {
   Serial.begin(9600);
   delay(500);
   Serial.println("EventSwitch Basic Example");
+
+  Serial.print("digitalRead is: ");
+  Serial.print(HIGH == digitalRead(switchPin) ? "HIGH" : "LOW");
+  Serial.print(" at startup.");
+  Serial.print(" so this means the switch is: ");
+  Serial.println(mySwitch.isOn() ? "ON" : "OFF");
 
   //You can reverse the on/off events rather than change your wiring.
   //mySwitch.reverseOnOff();

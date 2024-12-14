@@ -1,7 +1,8 @@
 # EventSwitch Class
 
-The `EventSwitch` class is for standard on/off inputs. 
+The `EventSwitch` class is for standard on/off inputs. Like the `EventButton` the switch must be wired between the pin and GND. When the switch is closed (LOW) its state will be 'ON' and when open (HIGH) it will be 'OFF'.
 
+A quick explainer: The switch pin is configured with the microcontroller's internal [`INPUT_PULLUP` resistor](https://en.wikipedia.org/wiki/Pull-up_resistor). In this configuration, without anything attached, the pin will read as HIGH because it has been 'pulled up' to the voltage of the board (either 3.3V or 5V). When you attach a switch (or button) that is wired from the pin to GND, if the switch is closed (or the button pressed), the weak pullup resistor is overcome by the closed switch 'pulling' the pin to GND (0V) or LOW.
 
 ![button](../images/switch.png)
 
@@ -71,7 +72,7 @@ See [common methods](Common.md#void-setcallbackcallbackfunction-func) for detail
 
 
 #### `void reverseOnOff(bool rev=true)`
-If your wiring is reversed, you can switch it with this method. The `ON` event is fired in place of the `OFF` event and vice versa.
+If your wiring is reversed, you can switch it with this method. The `ON` event is fired in place of the `OFF` event and vice versa. Default is `true` so pass `false` to return to 'normal' behaviour. 
 
 #### `bool isOnOffReversed()`
 Returns true if on and off are reversed.
