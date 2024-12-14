@@ -46,7 +46,9 @@ I'm investigating how to write a unit test suite but mocking input pins (particu
 In the meantime, these are my physical test rigs:
 
 A custom 'hat' For Arduino UNO, ESP8266 and ESP32:
+
 ![Test Rig](../images/test-rig.jpg)
 
 and a [Manaualmatic Pendant](https://github.com/Stutchbury/Manualmatic-Pendant) for the Teensy 4.1:
+
 ![Manualmatic Pendant](../images/manualmatic.jpg)
