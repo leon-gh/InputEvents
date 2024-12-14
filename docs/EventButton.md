@@ -1,8 +1,8 @@
 # EventButton Class
 
-The `EventAnalog` class is for analog inputs - slice an analog range into configurable number of increments. 
+The `EventButton` class is for momentary inputs. The momentary switch (button) must be wired between the pin and GND.
 
-Probably the easiest way to implement a button - a single function and three lines of code!
+`EventButton` is probably the easiest way to implement a button - a single function and three lines of code gives you information on all types of user inputs as detailed in the [Event Types](#event-types) below.
 
 It is effectively an event wrapper for Thomas Fredericks' [Bounce2 library](https://github.com/thomasfredericks/Bounce2) - huge thanks to the Thomas - I am standing on the shoulders of giants.
 
