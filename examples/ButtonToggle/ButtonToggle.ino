@@ -1,8 +1,8 @@
 /**
- * A basic example of using the EventButton.
+ * A example of using the EventButton to toggle an LED on & off.
  *
- * When the button is pressed the inbuilt LED on pin 13
- * will turn on, when released will turn off.
+ * When the button is clicked the inbuilt LED on pin 13
+ * will turn on, when it is clicked again the LED will turn off.
  *
  * Unlike the standard Examples->Digital->Button example, our 
  * button is connected between pin 2 and GND because we 
@@ -57,20 +57,17 @@ void printEvent(InputEventType et) {
  * EventButton& defined as parameters.
  */
 void onButtonEvent(InputEventType et, EventButton& eb) {
-  if ( et == InputEventType::PRESSED ) {
-    // turn LED on:
-    digitalWrite(ledPin, HIGH);
-  } else if ( et == InputEventType::RELEASED ) {
-    // turn LED off:
-    digitalWrite(ledPin, LOW);
-  }
   Serial.print("onButtonEvent: ");
   printEvent(et); //Call the utility event to print the event type
   if ( et == InputEventType::CLICKED ) {
-    if ( eb.clickCount() > 1 ) {
+    if ( eb.clickCount() > 1  ) { //Don't toggle on double clicks etc
       Serial.print(" - ");
       Serial.print(eb.clickCount());
       Serial.print(" click(s)"); 
+    } else {
+      // Toggle the LED on single click:
+      bool ledState = digitalRead(ledPin);
+      digitalWrite(ledPin, !ledState);
     }
   }
   Serial.println();
