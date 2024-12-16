@@ -13,8 +13,6 @@
 #ifndef EVENT_ENCODER_H
 #define EVENT_ENCODER_H
 
-
-
 #include "Arduino.h"
 #include "EventInputBase.h"
 
@@ -42,7 +40,7 @@ public:
     /**
      * Construct a rotary encoder
      */
-    EventEncoder(byte encoderPin1, byte encoderPin2);
+    EventEncoder(uint8_t encoderPin1, uint8_t encoderPin2);
 
     void setCallback(CallbackFunction f) { callbackFunction = f; }
 
@@ -127,7 +125,12 @@ private:
     unsigned long rateLimitCounter = 0;   
     int encoderIncrement  = 0;
 
-
+#if defined(ESP32) || defined(ESP8266)
+    uint8_t _encoderPin1;
+    uint8_t _encoderPin2;
+    bool _started = false;
+    void begin();
+#endif
 
 };
 
