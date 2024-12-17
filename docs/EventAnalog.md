@@ -1,6 +1,6 @@
 # EventAnalog Class
 
-The [`EventAnalog`](docs/EventAnalog.md) class is for analog inputs - slice an analog range into configurable number of increments. 
+The [`EventAnalog`](EventAnalog.md) class is for analog inputs - slice an analog range into configurable number of increments. 
 
 For many uses of an analog input, the 1024 'slices' in the analog range are more than is necessary. This library allows you to reduce those 1024 slices to a more managable number, calling a handler function or method each time the slice position increments up or down.
 

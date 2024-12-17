@@ -1,17 +1,17 @@
 # EventEncoderButton Class
 
-The [`EventEncoderButton`](docs/EventEncoderButton.md) class combines the [`EventEncoder`](docs/EventEncoder.md) class with the [`EventButton`](docs/EventButton.md) class and  is used for the common encoder buttons.
+The [`EventEncoderButton`](EventEncoderButton.md) class combines the [`EventEncoder`](EventEncoder.md) class with the [`EventButton`](EventButton.md) class and  is used for the common encoder buttons.
 
 
 The class provides all the encoder events with the addition of `CHANGED_PRESSED` which is fired when the encoder is pressed and turned. 
 
-All the [`EventButton`](docs/EventButton.md) events are also fired but if the encoder is turned while pressed the following changes to events occurs:
+All the [`EventButton`](EventButton.md) events are also fired but if the encoder is turned while pressed the following changes to events occurs:
 
 - on release, the button's `RELEASED` event is translated to a `CHANGED_RELEASED` event.
 - the `LONG_PRESS` is not fired.
 - Neither `CLICKED` or `LONG_CLICKED` are fired.
 
-When the encoder is not pressed and turned, its button behaves just like a regular [`EventButton`](docs/EventButton.md).
+When the encoder is not pressed and turned, its button behaves just like a regular [`EventButton`](EventButton.md).
 
 
 
@@ -50,7 +50,7 @@ See [example EncoderButton.ino](../examples/EncoderButton/EncoderButton.ino) for
 
 ## Event Types
 
-In addition to the [common events](Common.md#common-events) (Enabled, Disabled and Idle) and the [`EventEncoder`](docs/EventEncoder.md) & [`EventButton`](docs/EventButton.md) events, the following event types are fired by EventEncoderButton:
+In addition to the [common events](Common.md#common-events) (Enabled, Disabled and Idle) and the [`EventEncoder`](EventEncoder.md) & [`EventButton`](EventButton.md) events, the following event types are fired by EventEncoderButton:
 
 
 #### `InputEventType::CHANGED_PRESSED` 

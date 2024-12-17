@@ -29,7 +29,7 @@ I have tested with:
 - **ESP8266** - D1 Mini & Adafruit Feather 8266. Lots of compiler deprecation warnings for Encoder but compiles OK. Only one analog pin, so no joystick.
 - **ESP32** - D1 Mini32 & other random ones. No issues since v1.0.2.
 
-Encoder supports far more boards than I have available for testing but if your board is not supported, the [`EventEncoder`](docs/EventEncoder.md) and [`EventEncoderButton`](docs/EventEncoderButton.md) classes will be excluded if you do not have PJRC's Encoder library installed in your project.
+Encoder supports far more boards than I have available for testing but if your board is not supported, the [`EventEncoder`](EventEncoder.md) and [`EventEncoderButton`](EventEncoderButton.md) classes will be excluded if you do not have PJRC's Encoder library installed in your project.
 
 In the Arduino IDE you must expicitly `#include <Encoder.h>` before `EventEncoder.h` or `EventEncoderButton.h` in your sketches.
 
