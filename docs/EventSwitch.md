@@ -1,6 +1,6 @@
 # EventSwitch Class
 
-The `EventSwitch` class is for standard on/off inputs. Like the `EventButton` the switch must be wired between the pin and GND. When the switch is closed (LOW) its state will be 'ON' and when open (HIGH) it will be 'OFF'.
+The [`EventSwitch`](docs/EventSwitch.md) class is for standard on/off inputs. Like the [`EventButton`](docs/EventButton.md) the switch must be wired between the pin and GND. When the switch is closed (LOW) its state will be 'ON' and when open (HIGH) it will be 'OFF'.
 
 A quick explainer: The switch pin is configured with the microcontroller's internal [`INPUT_PULLUP` resistor](https://en.wikipedia.org/wiki/Pull-up_resistor). In this configuration, without anything attached, the pin will read as HIGH because it has been 'pulled up' to the voltage of the board (either 3.3V or 5V). When you attach a switch (or button) that is wired from the pin to GND, if the switch is closed (or the button pressed), the weak pullup resistor is overcome by the closed switch 'pulling' the pin to GND (0V) or LOW.
 

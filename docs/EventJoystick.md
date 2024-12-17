@@ -1,6 +1,6 @@
 # EventJoystick Class
 
-The `EventJoystick` class is two `EventAnalog` inputs configured as a joystick.
+The [`EventJoystick`](docs/EventJoystick.md) class contains two [`EventAnalog`](docs/EventAnalog.md) inputs configured as a joystick.
 
 ![button](../images/thumb-joystick.jpg)
 

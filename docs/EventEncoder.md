@@ -1,6 +1,6 @@
 # EventEncoder Class
 
-The `EventEncoder` class is for quadrature encoder inputs providing the position & encoder increment, event rate limiting without losing steps (eg for easy acceleration or to reduce events sent over Serial). 
+The [`EventEncoder`](docs/EventEncoder.md) class is for quadrature encoder inputs providing the position & encoder increment, event rate limiting without losing steps (eg for easy acceleration or to reduce events sent over Serial). 
 
 It is effectively an event wrapper for Paul Stoffregen's [Encoder library](https://www.pjrc.com/teensy/td_libs_Encoder.html)
 
@@ -78,7 +78,7 @@ Quadrature encoders usually have four states for each 'click' of the rotary cont
 
 You can set this to any positive integer eg 8 would increment the position every 2 clicks. 
 
-Affects pressed+turning too for the `EventEncoderButton`.
+Affects pressed+turning too for the [`EventEncoderButton`](docs/EventEncoderButton.md).
 
 #### `uint8_t getPositionDivider()`
 Get the position divider.

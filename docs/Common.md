@@ -24,7 +24,7 @@ Setup methods are typically called from within `setup()` function but can be upd
 
 Sets the function to be called on the event being fired and takes a single argument of your function name.
 
-Your function signature must match the input class. Eg for an `EventButton`:
+Your function signature must match the input class. Eg for an [`EventButton`](docs/EventButton.md):
 ```cpp
   void onButtonEvent(InputEventType et, EventButton & eb) {
     ...
@@ -37,7 +37,7 @@ and set the callback function as: `myButton.setCallback(onButtonEvent);`
 
 #### `void setCallback(T* instance, void (T::*method))`
 
-As with the free function above, your method signature must match the input class. Eg for an `EventButton`:
+As with the free function above, your method signature must match the input class. Eg for an [`EventButton`](docs/EventButton.md):
 ```cpp
   void Foo::onButtonEvent(InputEventType et, EventButton & eb) {
     ...

@@ -98,7 +98,7 @@ void onButtonEvent(InputEventType et, EventButton& eb) {
 ---
 No changes to your `loop()` logic.
 
-An event handler, aka a 'callback' (in this example, the `onButtonEvent()`) can choose to act on any or all events (one at a time!) that may be fired by the input(s). It could call one function on [`LONG_PRESS`](EventButton.md#inputeventtypelong_press) and a different one on [`LONG_CLICKED`](EventButton.md#inputeventtypelong_clicked) (see `EventButton` [docs](EventButton.md#event-types) for why these two event names have different tenses).
+An event handler, aka a 'callback' (in this example, the `onButtonEvent()`) can choose to act on any or all events (one at a time!) that may be fired by the input(s). It could call one function on [`LONG_PRESS`](EventButton.md#inputeventtypelong_press) and a different one on [`LONG_CLICKED`](EventButton.md#inputeventtypelong_clicked) (see [`EventButton` docs](EventButton.md#event-types) for why these two event names have different tenses).
 
 Long press might increment a counter and then long click might take action on the value of that counter.
 

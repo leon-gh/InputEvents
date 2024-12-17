@@ -1,6 +1,6 @@
 # EventButton Class
 
-The `EventButton` class is for momentary inputs. The momentary switch (button) must be wired between the pin and GND.
+The [`EventButton`](docs/EventButton.md) class is for momentary inputs. The momentary switch (button) must be wired between the pin and GND.
 
 `EventButton` is probably the easiest way to implement a button - a single function and three lines of code gives you information on all types of user inputs as detailed in the [Event Types](#event-types) below.
 
