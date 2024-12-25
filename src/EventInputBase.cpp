@@ -24,6 +24,12 @@ void EventInputBase::onDisabled() { invoke(InputEventType::DISABLED); }
 void EventInputBase::onIdle() { invoke(InputEventType::IDLE); }
 
 
+void EventInputBase::resetIdleTimer() { 
+    lastEventMs = millis(); 
+    idleFlagged = false;
+}
+
+
 void EventInputBase::blockEvent(InputEventType et) {
     uint8_t index = static_cast<uint8_t>(et) >> 3;    // Find the index of the array (byte position)
     uint8_t position = static_cast<uint8_t>(et) & 7; // Find the position within the byte (bit position)
@@ -47,15 +53,6 @@ bool EventInputBase::isEventAllowed(InputEventType et) {
     uint8_t position = static_cast<uint8_t>(et) & 7;
     return (excludedEvents[index] & (1 << position)) == 0; // Check if the corresponding bit is set
 }
-
-
-
-
-
-
-
-
-
 
 
 void EventInputBase::enable(bool e ) {

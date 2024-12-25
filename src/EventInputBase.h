@@ -148,6 +148,13 @@ class EventInputBase {
      */
     bool isIdle() { return (millis() - lastEventMs) > idleTimeout; }
 
+    /**
+     * Reset the idle timer. The IDLE event will fire setIdleTimeout ms
+     * after this is called.
+     * This is normally done automatically every time an event is fired.
+     */
+    void resetIdleTimer();
+
 protected:
     virtual void invoke(InputEventType et) = 0;
 
