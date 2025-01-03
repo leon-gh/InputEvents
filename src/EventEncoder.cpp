@@ -44,6 +44,10 @@ void EventEncoder::onEnabled() {
     invoke(InputEventType::ENABLED);
 }
 
+void EventEncoder::unsetCallback() {
+    callbackFunction = nullptr;
+    EventInputBase::unsetCallback();
+}
 
 void EventEncoder::update() {
     #if defined(ESP32) || defined(ESP8266)

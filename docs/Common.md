@@ -49,6 +49,15 @@ Note: you can still pass a lambda to the free function `setCallback` if that is 
 `myButton.setCallback([&](EventButton &btn) { foo.onButtonEvent(btn); });`
 
 
+#### `void unsetCallback()`
+
+Clear a callback that has been set. If using a class method, this must be called before the class instance is destroyed.
+
+#### `bool isCallbackSet()`
+
+Returns true if the callback has been set. Note: This does *not* guarantee the callback is still valid.
+
+
 #### `void enable(bool e = true);`
 Enable or disable a function. Default is to enable, pass `false` to disable.
 

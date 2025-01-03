@@ -11,12 +11,6 @@
 
 #include <Arduino.h>
 
-// #if defined(__has_include) // Check if __has_include is supported
-//     #if __has_include(<functional>)
-//         #define FUNCTIONAL_SUPPORTED
-//     #endif
-// #endif
-
 #include "InputEvents.h"
 
 #ifdef FUNCTIONAL_SUPPORTED
@@ -73,6 +67,16 @@ class EventInputBase {
 
 
     public:
+
+    /**
+     * Unset the callback. Must be overriden in derived class & then base method called.
+     */
+    virtual void unsetCallback();
+
+    /**
+     * Returns true if the callback is set.
+     */
+    bool isCallbackSet() { return callbackIsSet; }
 
     void update();
 
@@ -156,6 +160,8 @@ class EventInputBase {
     void resetIdleTimer();
 
 protected:
+    bool callbackIsSet = false; //Required because in C/C++ callback has to be defined in derived classes... :-/
+
     virtual void invoke(InputEventType et) = 0;
 
     virtual void onEnabled();

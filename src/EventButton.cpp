@@ -21,8 +21,10 @@ EventButton::EventButton(byte buttonPin)
         bounce->attach(buttonPin, INPUT_PULLUP); //then attach button
     }
 
-
-
+void EventButton::unsetCallback() {
+    callbackFunction = nullptr;
+    EventInputBase::unsetCallback();
+}
 
 void EventButton::update() {
     if (_enabled) {

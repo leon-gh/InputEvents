@@ -23,6 +23,10 @@ EventSwitch::EventSwitch(byte buttonPin)
     }
 
 
+void EventSwitch::unsetCallback() {
+    callbackFunction = nullptr;
+    EventInputBase::unsetCallback();
+}
 
 void EventSwitch::update() {
     if (_enabled) {

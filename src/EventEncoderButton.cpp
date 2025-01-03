@@ -26,7 +26,10 @@ EventEncoderButton::EventEncoderButton(byte encoderPin1, byte encoderPin2, byte 
 
     }
 
-
+void EventEncoderButton::unsetCallback() {
+    callbackFunction = nullptr;
+    EventInputBase::unsetCallback();
+}
 
 void EventEncoderButton::update() {
     encoder.update();

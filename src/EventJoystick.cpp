@@ -58,6 +58,10 @@ void EventJoystick::onInputYCallback(InputEventType et, EventInputBase & ie) {
     }
 }
 
+void EventJoystick::unsetCallback() {
+    callbackFunction = nullptr;
+    EventInputBase::unsetCallback();
+}
 
 void EventJoystick::update() {
     x.update();

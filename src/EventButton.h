@@ -37,7 +37,10 @@ class EventButton : public EventInputBase {
      */
     EventButton(byte buttonPin);
 
-    void setCallback(CallbackFunction f) { callbackFunction = f; }
+    void setCallback(CallbackFunction f) {
+        callbackFunction = f;
+        callbackIsSet = true;
+    }
 
     #if defined(FUNCTIONAL_SUPPORTED)
     // Method to set callback with instance and class method
@@ -47,10 +50,11 @@ class EventButton : public EventInputBase {
         callbackFunction = [instance, method](InputEventType et, EventButton& ie) {
             (instance->*method)(et, ie); // Call the member function on the instance
         };
+        callbackIsSet = true;
     }
     #endif
 
-
+    void unsetCallback() override;
 
     void update();
 

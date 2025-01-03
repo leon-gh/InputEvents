@@ -34,7 +34,10 @@ public:
      */
     EventAnalog(byte analogPin);
 
-    void setCallback(CallbackFunction f) {callbackFunction = f; }
+    void setCallback(CallbackFunction f) {
+        callbackFunction = f;
+        callbackIsSet = true;
+    }
 
     #if defined(FUNCTIONAL_SUPPORTED)
     // Method to set callback with instance and class method
@@ -44,8 +47,11 @@ public:
         callbackFunction = [instance, method](InputEventType et, EventAnalog &ie) {
             (instance->*method)(et, ie); // Call the member function on the instance
         };
+        callbackIsSet = true;
     }
     #endif
+
+    void unsetCallback() override;
 
     void update();
 

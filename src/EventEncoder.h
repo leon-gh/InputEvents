@@ -42,7 +42,10 @@ public:
      */
     EventEncoder(uint8_t encoderPin1, uint8_t encoderPin2);
 
-    void setCallback(CallbackFunction f) { callbackFunction = f; }
+    void setCallback(CallbackFunction f) {
+        callbackFunction = f;
+        callbackIsSet = true;
+    }
 
     #if defined(FUNCTIONAL_SUPPORTED)
     // Method to set callback with instance and class method
@@ -52,8 +55,11 @@ public:
         callbackFunction = [instance, method](InputEventType et, EventEncoder &ie) {
             (instance->*method)(et, ie); // Call the member function on the instance
         };
+        callbackIsSet = true;
     }
     #endif
+
+    void unsetCallback() override;
 
     void update();
 

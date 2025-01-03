@@ -15,6 +15,10 @@ EventAnalog::EventAnalog(byte pin) {
     setSlicePos();
 }
 
+void EventAnalog::unsetCallback() {
+    callbackFunction = nullptr;
+    EventInputBase::unsetCallback();
+}
 
 void EventAnalog::invoke(InputEventType et) {
     if (isEventAllowed(et) && callbackFunction != nullptr) {

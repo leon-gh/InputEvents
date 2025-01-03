@@ -8,6 +8,12 @@
 
 #include "EventInputBase.h"
 
+void EventInputBase::unsetCallback() {
+    callbackIsSet = false;
+    #ifndef FUNCTIONAL_SUPPORTED
+        setOwner(nullptr);
+    #endif
+}
 
 void EventInputBase::update() {
     //fire idle timeout callback
