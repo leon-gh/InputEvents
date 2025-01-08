@@ -167,6 +167,15 @@ class EventInputBase {
 protected:
     bool callbackIsSet = false; //Required because in C/C++ callback has to be defined in derived classes... :-/
 
+    /**
+     * Returns true if an event can be invoked and if so, will also
+     * reset the idle timeout timer if events are not
+     * ENABLED, DISABLED or IDLE.
+     * If you don't want to reset the idle timer, use isEventAllowed()
+     * The assumption is you *will* invoke() if this returns true.
+     */
+    bool isInvokable(InputEventType et);
+
     virtual void invoke(InputEventType et) = 0;
 
     virtual void onEnabled();

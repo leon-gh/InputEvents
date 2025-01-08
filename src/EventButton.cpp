@@ -32,8 +32,6 @@ void EventButton::update() {
     if (_enabled) {
         //button update (fires pressed/released callbacks)
         if (bounce->update()) {
-            lastEventMs = millis();
-            idleFlagged = false;
             _buttonState = bounce->read();
             if (bounce->fell()) {
                 previousState = HIGH;
@@ -48,15 +46,11 @@ void EventButton::update() {
                 }
                 previousState = LOW;
                 invoke(InputEventType::RELEASED);
-                //onReleased();
-                //@TODO SHould previousState be moved to onReleased.
-                //previousState = LOW;
             }
         }
         //fire long press callbacks
         if (LOW == bounce->read()) {
             if (bounce->currentDuration() > (uint16_t)(longClickDuration + (longPressCounter * longPressInterval ))) {
-                lastEventMs = millis();
                 longPressCounter++;
                 if ((repeatLongPress || longPressCounter == 1) ) {
                     invoke(InputEventType::LONG_PRESS);
@@ -69,7 +63,6 @@ void EventButton::update() {
             if (bounce->previousDuration() > longClickDuration) {
                 clickCounter = 0;
                 prevClickCount = 1;
-                //longPressCounter = 0;
                 invoke(InputEventType::LONG_CLICKED);
                 longPressCounter = 0;
             } else {
@@ -83,7 +76,7 @@ void EventButton::update() {
 
 
 void EventButton::invoke(InputEventType et) {
-    if ( isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }

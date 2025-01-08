@@ -25,7 +25,7 @@ void EventEncoder::begin() {
 }
 
 void EventEncoder::invoke(InputEventType et) {
-    if (isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }
@@ -51,8 +51,6 @@ void EventEncoder::update() {
         if ( millis() > (rateLimitCounter + rateLimit) ) { 
             readIncrement();
             if ( encoderIncrement !=0 ) {
-                idleFlagged = false;    
-                lastEventMs = millis();
                 currentPosition += encoderIncrement;
                 invoke(InputEventType::CHANGED);
             }

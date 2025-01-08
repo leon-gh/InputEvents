@@ -43,7 +43,7 @@ void EventEncoderButton::update() {
 
 
 void EventEncoderButton::invoke(InputEventType et) {
-    if (isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }

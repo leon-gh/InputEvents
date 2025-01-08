@@ -34,7 +34,7 @@ void EventAnalog::unsetCallback() {
 }
 
 void EventAnalog::invoke(InputEventType et) {
-    if (isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }
@@ -68,8 +68,6 @@ void EventAnalog::update() {
                 if ( currentPos != readPos ) {
                     previousPos = currentPos;
                     currentPos = readPos;
-                    lastEventMs = millis();
-                    idleFlagged = false;
                     _hasChanged = true;
                     invoke(InputEventType::CHANGED);
                 }

@@ -124,7 +124,7 @@ void EventJoystick::setRateLimit(uint16_t ms) {
 
 
 void EventJoystick::invoke(InputEventType et) {
-    if (isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }

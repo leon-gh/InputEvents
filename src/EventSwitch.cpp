@@ -32,8 +32,6 @@ void EventSwitch::unsetCallback() {
 void EventSwitch::update() {
     if (_enabled) {
         if (bounce->update()) {
-            lastEventMs = millis();
-            idleFlagged = false;
             currentState = bounce->read();
             if (bounce->fell()) {
                 previousState = HIGH;
@@ -48,7 +46,7 @@ void EventSwitch::update() {
 }
 
 void EventSwitch::invoke(InputEventType et) {
-    if (isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }
