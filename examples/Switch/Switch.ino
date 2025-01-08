@@ -50,6 +50,7 @@ EventSwitch mySwitch(switchPin); //Create an EventSwitch
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  mySwitch.begin();
   delay(500);
   Serial.println("EventSwitch Basic Example");
 

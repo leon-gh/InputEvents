@@ -53,6 +53,7 @@ EventAnalog myAnalog(analogPin); // Create an EventAnalog.
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  myAnalog.begin();
   delay(500);
   Serial.println("EventAnalog Basic Example");
   //Optionally initialise at the low end of the potentiometer

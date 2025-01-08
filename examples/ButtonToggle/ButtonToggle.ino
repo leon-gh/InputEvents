@@ -79,6 +79,7 @@ EventButton myButton(buttonPin); // Create an EventButton.
 
 void setup() {
   Serial.begin(9600);
+  myButton.begin();
   delay(500);
   Serial.println("EventButton Basic Example");
   pinMode(ledPin, OUTPUT);
