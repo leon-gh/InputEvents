@@ -19,6 +19,7 @@ void onJoystickEvent(InputEventType et, EventJoystick& ej) {
 }
 void setup() {
     Serial.begin(9600);
+    myJoystick.begin();
     // Link the joystick's callback to function defined above
     myJoystick.setCallback(onJoystickEvent);
     myJoystick.setStartValues();

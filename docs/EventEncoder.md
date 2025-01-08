@@ -25,6 +25,7 @@ void onEncoderEvent(InputEventType et, EventEncoder& ee) {
 }
 void setup() {
     Serial.begin(9600);
+    myEncoder.begin();
     // Link the encoder's callback to function defined above
     myEncoder.setCallback(onEncoderEvent);
 }

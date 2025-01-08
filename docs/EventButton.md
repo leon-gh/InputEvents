@@ -21,6 +21,7 @@ void onButtonEvent(InputEventType et, EventButton& eb) {
 }
 void setup() {
   Serial.begin(9600);
+  myButton.begin();
   delay(500);
   //Link the event(s) to your function
   myButton.setCallback(onButtonEvent);

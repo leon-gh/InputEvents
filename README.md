@@ -13,7 +13,7 @@ Also a huge thanks to [@kfoltman](https://github.com/kfoltman) for genty guiding
 I am standing on the shoulders of giants.
 
 
-**Not heard of the term 'event' programming before?** Here's a quick primer: [Event Programming 101](docs/EventProgramming101.md). It is by far the easiest way to get your project working with external controls.
+**Not heard of the term 'event' programming?** Here's a quick primer: [Event Programming 101](docs/EventProgramming101.md). It is by far the easiest way to get your project working with external controls.
 
 ## INSTALLATION
 
@@ -44,6 +44,7 @@ void onButtonCallback(InputEventType et, EventButton& eb) {
   Serial.println("A button event was fired!");
 }
 void setup() {
+    myButton.begin();
     // Link the button's callback to function defined above
     myButton.setCallback(onButtonCallback);
 }
@@ -53,7 +54,7 @@ void loop() {
 }
 ```
 
-That's it! A function and three lines of code and you have a button connected and ready to process events.
+That's it! A function and four lines of code and you have a button connected and ready to process events.
 
 
 ## Input Classes

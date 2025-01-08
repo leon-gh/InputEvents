@@ -21,6 +21,7 @@ void onSwitchEvent(InputEventType et, EventSwitch& es) {
 }
 void setup() {
     Serial.begin(9600);
+    mySwitch.begin();
     // Link the switch's callback to function defined above
     mySwitch.setCallback(onSwitchEvent);
 }

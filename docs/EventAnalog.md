@@ -23,6 +23,7 @@ void onAnalogEvent(InputEventType et, EventAnalog& ea) {
 }
 void setup() {
     Serial.begin(9600);
+    myAnalog.begin();
     // Link the button's callback to function defined above
     myAnalog.setCallback(onAnalogEvent);
 }
@@ -51,6 +52,16 @@ Construct an EventAnalog
 ```cpp
 EventAnalog(byte analogPin);
 ```
+The `analogPin` parameter *must* be an analog pin. For ESP32 avoid using pins attached to ADC2 (GPIO 0, 2, 4, 12-15, 25-27) as these are shared by the WiFi module.
+
+For most boards this constructor will work fine but if your board has an ADC (analog to digital converter) that is higher than the standard Arduino 10 bits, pass the resolution (in bits) of your board to the contructor:
+
+```cpp
+EventAnalog(byte analogPin, uint8_t adcBits);
+```
+The Arduino Due, Zero, MKR; ESP32, ARM, SAMD & STM32 based boards all use 12 bit ADCs. Teensy boards can use higher bit ADCs but default to 10 bit.
+
+On boards with an ADC greater than 10 bits, the function [`analogReadResolution(bits)`](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogReadResolution/) can be used to change the ADC resolution.
 
 ## Class Methods
 

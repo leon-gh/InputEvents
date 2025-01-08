@@ -18,6 +18,10 @@ The following methods are available in all input classes.
 
 Setup methods are typically called from within `setup()` function but can be updated at runtime.
 
+#### `void begin()`
+
+Since v1.1.0, you *must* call `begin()` from within setup, prefereably before other setup methods for the input. This has been introduced to follow the Arduino library conventions - primarily required because some board libraries cannot guarantee the board's pins will be fully configured before `setup()`.
+
 ##### Setting a Callback for Free Functions
 
 #### `void setCallback(CallbackFunction func)`
