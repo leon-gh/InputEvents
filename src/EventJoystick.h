@@ -34,6 +34,8 @@ protected:
 
 public:
 
+    void begin();
+
     void setCallback(CallbackFunction f) {
         callbackFunction = f;
         callbackIsSet = true;
@@ -57,7 +59,7 @@ public:
     /**
      * Construct a joystick
      */
-    EventJoystick(byte analogX, byte analogY);
+    EventJoystick(byte analogX, byte analogY, uint8_t adcBits=10);
 
     void unsetCallback() override;
 

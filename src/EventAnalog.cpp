@@ -9,10 +9,23 @@
 
 #include "EventAnalog.h"
 
-EventAnalog::EventAnalog(byte pin) {
+EventAnalog::EventAnalog(byte pin, uint8_t adcBits /*=10*/) {
     analogPin = pin;
+    adcMax = (1U << adcBits) - 1;
+    minVal = adcMax/10;
+    maxVal = adcMax - minVal;
+    adcResolution = adcMax;
+}
+
+void EventAnalog::begin() {
+    pinMode(analogPin, INPUT);
+    delayMicroseconds(2000); // Allow pin to settle
     setSliceNeg();
     setSlicePos();
+    // Some boards change the ADC value between begin() and first update())
+    // so this is re-called in update(). Required here so position() can be used
+    // before first update();
+    setInitialReadPos();
 }
 
 void EventAnalog::unsetCallback() {
@@ -28,18 +41,17 @@ void EventAnalog::invoke(InputEventType et) {
 
 void EventAnalog::update() {
     if (!_started) {
+        // This should only be required in begin() method but on some boards (ESP32s mainly) 
+        // the analog output will change between begin() and the first update()
+        // triggering a CHANGED event.
         // Set the start position so we don't trigger an event before moving
-        readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, 1023 ), 0, 1023);
-        setReadPos(readVal - startVal);
-        currentPos = readPos;
-        previousPos = currentPos;
+        setInitialReadPos();
         _started = true;
     }
 
-
     if ( _enabled || _allowRead ) {
         _hasChanged = false;
-        readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, 1023 ), 0, 1023);
+        readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, adcMax ), 0, adcMax);
         // For joysticks, resistance either side of centre can be quite 
         // different ranges so we need to slice both sides
         if ( readVal < minVal ) {
@@ -85,6 +97,14 @@ void EventAnalog::setReadPos(int16_t offset) {
         previousVal = readVal;
         readPos = 0;
     }
+}
+
+void EventAnalog::setInitialReadPos() {
+    // Set the start position so we don't trigger an event before moving
+    readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, adcMax ), 0, adcMax);
+    setReadPos(readVal - startVal);
+    currentPos = readPos;
+    previousPos = currentPos;
 }
 
 

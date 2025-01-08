@@ -37,6 +37,8 @@ class EventButton : public EventInputBase {
      */
     EventButton(byte buttonPin);
 
+    void begin();
+
     void setCallback(CallbackFunction f) {
         callbackFunction = f;
         callbackIsSet = true;
@@ -128,6 +130,7 @@ class EventButton : public EventInputBase {
 
     private:
 
+    byte buttonPin;
     Bounce* bounce;
 
     //state
@@ -143,7 +146,6 @@ class EventButton : public EventInputBase {
     bool repeatLongPress = true;
     uint16_t longPressInterval = 500;
     uint16_t longPressCounter = 0;
-    uint32_t idleTimeout = 10000;
 
 
 

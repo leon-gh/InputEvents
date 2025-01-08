@@ -69,6 +69,11 @@ class EventInputBase {
     public:
 
     /**
+     * Must be called from setup().
+     */
+    virtual void begin() = 0;
+
+    /**
      * Unset the callback. Must be overriden in derived class & then base method called.
      */
     virtual void unsetCallback();

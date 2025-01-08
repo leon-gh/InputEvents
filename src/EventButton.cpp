@@ -9,17 +9,19 @@
 #include "EventButton.h"
 
 
-EventButton::EventButton(byte buttonPin)
-    : bounce(new Bounce()) {
-        pinMode(buttonPin, INPUT_PULLUP); //Set pullup first
-        // Top tip From PJRC's Encoder - without this delay the
-        // long-press doesn't fire on first press.
-        // allow time for a passive R-C filter to charge
-        // through the pullup resistors, before reading
-        // the initial state
-        delayMicroseconds(2000); //Delay
-        bounce->attach(buttonPin, INPUT_PULLUP); //then attach button
-    }
+EventButton::EventButton(byte pin)
+    : buttonPin(pin), bounce(new Bounce()) { }
+
+void EventButton::begin() {
+    pinMode(buttonPin, INPUT_PULLUP); //Set pullup first
+    // Top tip From PJRC's Encoder - without this delay the
+    // long-press doesn't fire on first press.
+    // allow time for a passive R-C filter to charge
+    // through the pullup resistors, before reading
+    // the initial state
+    delayMicroseconds(2000); //Delay
+    bounce->attach(buttonPin, INPUT_PULLUP); //then attach button
+}
 
 void EventButton::unsetCallback() {
     callbackFunction = nullptr;

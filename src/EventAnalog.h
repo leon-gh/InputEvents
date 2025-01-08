@@ -32,7 +32,9 @@ public:
     /**
      * Construct a button
      */
-    EventAnalog(byte analogPin);
+    EventAnalog(byte analogPin, uint8_t adcBits=10);
+
+    void begin();
 
     void setCallback(CallbackFunction f) {
         callbackFunction = f;
@@ -176,6 +178,7 @@ private:
     int16_t startBoundary = 50;
     int16_t endBoundary = 50;
     int16_t adcResolution = 1023;
+    int16_t adcMax = 1023;
 
 
     int16_t negativeIncrements = 25;
@@ -196,6 +199,7 @@ private:
     unsigned long rateLimitCounter = 0;   
 
     void setReadPos(int16_t offset);
+    void setInitialReadPos();
 
 
 
