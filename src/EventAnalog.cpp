@@ -12,7 +12,7 @@
 EventAnalog::EventAnalog(byte pin, uint8_t adcBits /*=10*/) {
     analogPin = pin;
     adcMax = (1U << adcBits) - 1;
-    minVal = adcMax/10;
+    minVal = adcMax/20;
     maxVal = adcMax - minVal;
     adcResolution = adcMax;
 }
@@ -110,6 +110,16 @@ void EventAnalog::setInitialReadPos() {
 void EventAnalog::setStartValue(uint16_t val) {
     startVal = max(val, (uint16_t)0);
     setSliceNeg();
+    setSlicePos();
+}
+
+void EventAnalog::setMinValue(uint16_t val) {
+    minVal = val; 
+    setSliceNeg();
+}
+
+void EventAnalog::setMaxValue(uint16_t val) {
+    maxVal = val; 
     setSlicePos();
 }
 

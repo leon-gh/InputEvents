@@ -107,6 +107,20 @@ public:
     void setStartValue();
     
     /**
+     * By default the minValue is set to 5% of the ADC range and auto calibrated 
+     * as the input is used. 
+     * You and manually set it here if you have confidence in your potentiometer range.
+     */
+    void setMinValue(uint16_t val);
+
+    /**
+     * By default the maxValue is set to 95% of the ADC range and auto calibrated 
+     * as the input is used. 
+     * You and manually set it here if you have confidence in your potentiometer range.
+     */
+    void setMaxValue(uint16_t val);
+
+    /**
      * @brief Used primarily for joysticks - it is very difficult to press the 
      * joystick button without moving the joystick so with this we can
      * create a central 'deadzone'.
