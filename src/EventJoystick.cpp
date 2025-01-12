@@ -106,9 +106,9 @@ bool EventJoystick::hasChanged() {
 
 bool EventJoystick::isEnabled() { return x.isEnabled() && y.isEnabled(); }
 
-void EventJoystick::allowRead(bool allow) { 
-    x.allowRead(allow);
-    y.allowRead(allow);
+void EventJoystick::enableAutoCalibrate(bool allow) { 
+    x.enableAutoCalibrate(allow);
+    y.enableAutoCalibrate(allow);
 }
 
 

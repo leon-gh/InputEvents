@@ -49,19 +49,20 @@ void EventAnalog::update() {
         _started = true;
     }
 
-    if ( _enabled || _allowRead ) {
+    if ( _enabled || autoCalibrate ) {
         _hasChanged = false;
         readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, adcMax ), 0, adcMax);
         // For joysticks, resistance either side of centre can be quite 
         // different ranges so we need to slice both sides
-        if ( readVal < minVal ) {
-            minVal = readVal;
-            setSliceNeg();
-        } else if ( readVal > maxVal ) {
-            maxVal = readVal;
-            setSlicePos();
+        if ( autoCalibrate ) {
+            if ( readVal < minVal ) {
+                minVal = readVal;
+                setSliceNeg();
+            } else if ( readVal > maxVal ) {
+                maxVal = readVal;
+                setSlicePos();
+            }
         }
-
         if ( _enabled ) {
             if( millis() > (rateLimitCounter + rateLimit) ) { 
                 setReadPos(readVal - startVal);

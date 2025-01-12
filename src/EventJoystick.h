@@ -123,16 +123,6 @@ public:
     bool isEnabled();
 
     /**
-     * Set enabled to true (default) or false
-     * This will enable/disable all event callbacks.
-     * If allowRead is set to true, will still do analogRead
-     * to allow manual setting of max negative/positive values without
-     * firing callbacks
-     * This is applied to both EventAnalog axis.
-     */
-    //void enable(bool e=true);
-
-    /**
      * @brief Return true if no activity on both EventAnalog
      * axis for  longer than setIdleTimeout - irrespective of 
      * whether the idle (or changed) callback has been fired
@@ -145,11 +135,12 @@ public:
     void setRateLimit(uint16_t ms);
 
     /**
-     * If allowRead is set to true, will still do analogRead
-     * to allow manual setting of max negative/positive values
-     * even when input is disabled (ie no callbacks fired)
+     * If enableAutoCalibrate is set to true (the default), will
+     * to auto calibrate setting of minValue and maxValue.
+     * This will be done even when input is disabled (ie no callbacks fired)
+     * Applied to both x and y axis.
      */
-    void allowRead(bool allow=true);
+    void enableAutoCalibrate(bool allow=true);
 
 
 

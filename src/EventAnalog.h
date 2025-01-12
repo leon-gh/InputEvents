@@ -150,11 +150,11 @@ public:
     void setRateLimit(uint16_t ms) { rateLimit = ms; }
 
     /**
-     * If allowRead is set to true, will still do analogRead
-     * to allow manual setting of max negative/positive values
-     * even when input is disabled (ie no callbacks fired)
+     * If enableAutoCalibrate is set to true (the default), will
+     * to auto calibrate setting of minValue and maxValue.
+     * This will be done even when input is disabled (ie no callbacks fired)
      */
-    void allowRead(bool allow=true) { _allowRead = allow; }
+    void enableAutoCalibrate(bool enable=true) { autoCalibrate = enable; }
 
 
     void reversePosition(bool rev=true) { _reversePosition = rev; }
@@ -191,7 +191,7 @@ private:
     int16_t previousPos = 0;
     bool _reversePosition = false;
 
-    bool _allowRead = true;
+    bool autoCalibrate = true;
     bool _hasChanged = false;
     bool _started = false;
 
