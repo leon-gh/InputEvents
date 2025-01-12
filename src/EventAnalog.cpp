@@ -14,7 +14,6 @@ EventAnalog::EventAnalog(byte pin, uint8_t adcBits /*=10*/) {
     adcMax = (1U << adcBits) - 1;
     minVal = adcMax/20;
     maxVal = adcMax - minVal;
-    adcResolution = adcMax;
 }
 
 void EventAnalog::begin() {
@@ -51,16 +50,14 @@ void EventAnalog::update() {
 
     if ( _enabled || autoCalibrate ) {
         _hasChanged = false;
-        readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, adcMax ), 0, adcMax);
+        readVal = analogRead(analogPin);
         // For joysticks, resistance either side of centre can be quite 
         // different ranges so we need to slice both sides
         if ( autoCalibrate ) {
             if ( readVal < minVal ) {
-                minVal = readVal;
-                setSliceNeg();
+                setMinValue(readVal);
             } else if ( readVal > maxVal ) {
-                maxVal = readVal;
-                setSlicePos();
+                setMaxValue(readVal);
             }
         }
         if ( _enabled ) {
@@ -100,7 +97,7 @@ void EventAnalog::setReadPos(int16_t offset) {
 
 void EventAnalog::setInitialReadPos() {
     // Set the start position so we don't trigger an event before moving
-    readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, adcMax ), 0, adcMax);
+    readVal = analogRead(analogPin);
     setReadPos(readVal - startVal);
     currentPos = readPos;
     previousPos = currentPos;

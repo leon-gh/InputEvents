@@ -85,8 +85,8 @@ public:
 
 
     /**
-     * @brief Split the analog range into this number of slices.
-     * A changed callback will be fire each time the increment changes. 
+     * @brief Split the analog range into this number of increments (slices).
+     * A changed callback will be fired each time the increment changes. 
      * 
      * @param numIncr 
      */
@@ -137,14 +137,6 @@ public:
     void setEndBoundary(uint16_t width=100);
 
     /**
-     * Set the ADC resolution for your board. Only use if your board
-     * is not the default 1023 resolution or you are testing a 5V UNO 
-     * board with a 3V3 input (675)!
-     * Note: All resolutionas are internally mapped to 0-1023.
-     */
-    void setAdcResolution(uint16_t res=1023) { adcResolution = res; }
-
-    /**
      * @brief Normally increments are set with setNumIncrements but
      * you can also set the negative and positive sides individually.
      * 
@@ -170,7 +162,6 @@ public:
      */
     void enableAutoCalibrate(bool enable=true) { autoCalibrate = enable; }
 
-
     void reversePosition(bool rev=true) { _reversePosition = rev; }
 
     bool isPositionReversed() { return _reversePosition; }
@@ -183,15 +174,14 @@ public:
 
 private:
     byte analogPin = 0;
-    int16_t startVal = 100;
+    int16_t startVal = 0;
     int16_t readVal = startVal;
     int16_t currentVal = startVal;
     int16_t previousVal = currentVal;
     int16_t minVal = 100;
     int16_t maxVal = 980;
-    int16_t startBoundary = 50;
-    int16_t endBoundary = 50;
-    int16_t adcResolution = 1023;
+    int16_t startBoundary = 0;
+    int16_t endBoundary = 0;
     int16_t adcMax = 1023;
 
 
