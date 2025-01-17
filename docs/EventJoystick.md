@@ -65,8 +65,6 @@ On boards with an ADC greater than 10 bits, the function [`analogReadResolution(
 
 ## Class Methods
 
-In addition to the [common methods](Common.md#common-methods) the following are available for EventAnalog:
-
 #### `void update()`
 
 Must be called within `loop()`. See [common methods](Common.md#void-update) for details.
@@ -74,7 +72,13 @@ Must be called within `loop()`. See [common methods](Common.md#void-update) for 
 
 ### Setup
 
-Setup methods are typically called from within `setup()` but can be updated at runtime.
+Setup methods are typically called from within `setup()` but can also be updated at runtime.
+
+Only `begin()` and `setCallback()` are required methods.
+
+In most cases the methods below are not required but provide a range of options to change the configuration to suit your hardware and functional requirements.
+
+In addition to the [common methods](Common.md#common-methods) the following are available for EventJoystick:
 
 #### `void setCallback(CallbackFunction func)`
 
@@ -100,6 +104,9 @@ This sets a 'dead zone' in the centre of the joystick - very useful if the joyst
 #### `void setOuterBoundary(uint16_t width=100)`
 Set the outer boundary of the joystick. This is useful to 'trim' the corners of the joystick so you get the maximum position in a circumference rather than in the corners.
 
+
+#### `void enableAutoCalibrate(bool allow=true)`
+When enableAutoCalibrate is set to true (the default), will auto calibrate minValue and maxValue. This will be done even when input is disabled (ie no callbacks fired). Apllied to both x and y axis.
 
 All the [`EventAnalog` setup](EventAnalog.md#setup) methods are available for each axis via `myJoystick.x` and `myJoystick.y`.
 
