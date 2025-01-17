@@ -25,7 +25,7 @@ constexpr auto ACTUAL_DISABLED_VALUE=DISABLED;
 constexpr auto DISABLED=ACTUAL_DISABLED_VALUE;
 #endif
 
-constexpr size_t NUM_EVENT_TYPE_ENUMS = 15; 
+constexpr size_t NUM_EVENT_TYPE_ENUMS = 17; 
 enum class InputEventType : uint8_t {
     //Common
     ENABLED,
@@ -35,6 +35,8 @@ enum class InputEventType : uint8_t {
     PRESSED,
     RELEASED,
     CLICKED,
+    DOUBLE_CLICKED,
+    MULTI_CLICKED,
     LONG_CLICKED,
     LONG_PRESS,
     //Encoder, Analog

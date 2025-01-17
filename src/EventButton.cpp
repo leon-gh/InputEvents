@@ -66,7 +66,13 @@ void EventButton::update() {
                 invoke(InputEventType::LONG_CLICKED);
                 longPressCounter = 0;
             } else {
-                invoke(InputEventType::CLICKED);
+                if ( clickCounter == 1 ) {
+                    invoke(InputEventType::CLICKED);
+                } else if (clickCounter == 2 ) {
+                    invoke(InputEventType::DOUBLE_CLICKED);
+                } else {
+                    invoke(InputEventType::MULTI_CLICKED);
+                }
                 clickCounter = 0;
             }
         }
