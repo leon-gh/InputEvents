@@ -90,6 +90,7 @@ EventEncoderButton myEncoderButton(encoderPin1, encoderPin2, buttonPin); //Creat
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  myEncoderButton.begin();
   delay(500);
   Serial.println("EventEncoderButton Basic Example");
 

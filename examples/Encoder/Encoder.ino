@@ -59,6 +59,7 @@ EventEncoder myEncoder(encoderPin1, encoderPin2); //Create an EventEncoder
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  myEncoder.begin();
   delay(500);
   Serial.println("EventEncoder Basic Example");
 

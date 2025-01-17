@@ -9,10 +9,22 @@
 
 #include "EventAnalog.h"
 
-EventAnalog::EventAnalog(byte pin) {
+EventAnalog::EventAnalog(byte pin, uint8_t adcBits /*=10*/) {
     analogPin = pin;
+    adcMax = (1U << adcBits) - 1;
+    minVal = adcMax/20;
+    maxVal = adcMax - minVal;
+}
+
+void EventAnalog::begin() {
+    pinMode(analogPin, INPUT);
+    delayMicroseconds(2000); // Allow pin to settle
     setSliceNeg();
     setSlicePos();
+    // Some boards change the ADC value between begin() and first update())
+    // so this is re-called in update(). Required here so position() can be used
+    // before first update();
+    setInitialReadPos();
 }
 
 void EventAnalog::unsetCallback() {
@@ -21,43 +33,39 @@ void EventAnalog::unsetCallback() {
 }
 
 void EventAnalog::invoke(InputEventType et) {
-    if (isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }
 
 void EventAnalog::update() {
     if (!_started) {
+        // This should only be required in begin() method but on some boards (ESP32s mainly) 
+        // the analog output will change between begin() and the first update()
+        // triggering a CHANGED event.
         // Set the start position so we don't trigger an event before moving
-        readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, 1023 ), 0, 1023);
-        setReadPos(readVal - startVal);
-        currentPos = readPos;
-        previousPos = currentPos;
+        setInitialReadPos();
         _started = true;
     }
 
-
-    if ( _enabled || _allowRead ) {
+    if ( _enabled || autoCalibrate ) {
         _hasChanged = false;
-        readVal =  constrain(map(analogRead(analogPin), 0, adcResolution, 0, 1023 ), 0, 1023);
+        readVal = analogRead(analogPin);
         // For joysticks, resistance either side of centre can be quite 
         // different ranges so we need to slice both sides
-        if ( readVal < minVal ) {
-            minVal = readVal;
-            setSliceNeg();
-        } else if ( readVal > maxVal ) {
-            maxVal = readVal;
-            setSlicePos();
+        if ( autoCalibrate ) {
+            if ( readVal < minVal ) {
+                setMinValue(readVal);
+            } else if ( readVal > maxVal ) {
+                setMaxValue(readVal);
+            }
         }
-
         if ( _enabled ) {
             if( millis() > (rateLimitCounter + rateLimit) ) { 
                 setReadPos(readVal - startVal);
                 if ( currentPos != readPos ) {
                     previousPos = currentPos;
                     currentPos = readPos;
-                    lastEventMs = millis();
-                    idleFlagged = false;
                     _hasChanged = true;
                     invoke(InputEventType::CHANGED);
                 }
@@ -87,10 +95,28 @@ void EventAnalog::setReadPos(int16_t offset) {
     }
 }
 
+void EventAnalog::setInitialReadPos() {
+    // Set the start position so we don't trigger an event before moving
+    readVal = analogRead(analogPin);
+    setReadPos(readVal - startVal);
+    currentPos = readPos;
+    previousPos = currentPos;
+}
+
 
 void EventAnalog::setStartValue(uint16_t val) {
     startVal = max(val, (uint16_t)0);
     setSliceNeg();
+    setSlicePos();
+}
+
+void EventAnalog::setMinValue(uint16_t val) {
+    minVal = val; 
+    setSliceNeg();
+}
+
+void EventAnalog::setMaxValue(uint16_t val) {
+    maxVal = val; 
     setSlicePos();
 }
 

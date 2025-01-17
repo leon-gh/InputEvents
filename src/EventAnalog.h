@@ -32,7 +32,9 @@ public:
     /**
      * Construct a button
      */
-    EventAnalog(byte analogPin);
+    EventAnalog(byte analogPin, uint8_t adcBits=10);
+
+    void begin();
 
     void setCallback(CallbackFunction f) {
         callbackFunction = f;
@@ -83,8 +85,8 @@ public:
 
 
     /**
-     * @brief Split the analog range into this number of slices.
-     * A changed callback will be fire each time the increment changes. 
+     * @brief Split the analog range into this number of increments (slices).
+     * A changed callback will be fired each time the increment changes. 
      * 
      * @param numIncr 
      */
@@ -105,6 +107,20 @@ public:
     void setStartValue();
     
     /**
+     * By default the minValue is set to 5% of the ADC range and auto calibrated 
+     * as the input is used. 
+     * You and manually set it here if you have confidence in your potentiometer range.
+     */
+    void setMinValue(uint16_t val);
+
+    /**
+     * By default the maxValue is set to 95% of the ADC range and auto calibrated 
+     * as the input is used. 
+     * You and manually set it here if you have confidence in your potentiometer range.
+     */
+    void setMaxValue(uint16_t val);
+
+    /**
      * @brief Used primarily for joysticks - it is very difficult to press the 
      * joystick button without moving the joystick so with this we can
      * create a central 'deadzone'.
@@ -119,14 +135,6 @@ public:
      * @param width - the analog value 
      */
     void setEndBoundary(uint16_t width=100);
-
-    /**
-     * Set the ADC resolution for your board. Only use if your board
-     * is not the default 1023 resolution or you are testing a 5V UNO 
-     * board with a 3V3 input (675)!
-     * Note: All resolutionas are internally mapped to 0-1023.
-     */
-    void setAdcResolution(uint16_t res=1023) { adcResolution = res; }
 
     /**
      * @brief Normally increments are set with setNumIncrements but
@@ -148,12 +156,11 @@ public:
     void setRateLimit(uint16_t ms) { rateLimit = ms; }
 
     /**
-     * If allowRead is set to true, will still do analogRead
-     * to allow manual setting of max negative/positive values
-     * even when input is disabled (ie no callbacks fired)
+     * If enableAutoCalibrate is set to true (the default), will
+     * to auto calibrate setting of minValue and maxValue.
+     * This will be done even when input is disabled (ie no callbacks fired)
      */
-    void allowRead(bool allow=true) { _allowRead = allow; }
-
+    void enableAutoCalibrate(bool enable=true) { autoCalibrate = enable; }
 
     void reversePosition(bool rev=true) { _reversePosition = rev; }
 
@@ -167,15 +174,15 @@ public:
 
 private:
     byte analogPin = 0;
-    int16_t startVal = 100;
+    int16_t startVal = 0;
     int16_t readVal = startVal;
     int16_t currentVal = startVal;
     int16_t previousVal = currentVal;
     int16_t minVal = 100;
     int16_t maxVal = 980;
-    int16_t startBoundary = 50;
-    int16_t endBoundary = 50;
-    int16_t adcResolution = 1023;
+    int16_t startBoundary = 0;
+    int16_t endBoundary = 0;
+    int16_t adcMax = 1023;
 
 
     int16_t negativeIncrements = 25;
@@ -188,7 +195,7 @@ private:
     int16_t previousPos = 0;
     bool _reversePosition = false;
 
-    bool _allowRead = true;
+    bool autoCalibrate = true;
     bool _hasChanged = false;
     bool _started = false;
 
@@ -196,6 +203,7 @@ private:
     unsigned long rateLimitCounter = 0;   
 
     void setReadPos(int16_t offset);
+    void setInitialReadPos();
 
 
 

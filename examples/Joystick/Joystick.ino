@@ -65,6 +65,7 @@ EventJoystick myJoystick(analogPin1, analogPin2); //Create an EventJoystick
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  myJoystick.begin();
   delay(500);
   Serial.println("EventJoystick Basic Example");
   //Initialise both potentiometers at their current position - this is normally

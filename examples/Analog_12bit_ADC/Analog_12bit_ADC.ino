@@ -1,10 +1,10 @@
 /**
- * A basic example of using the EventAnalog.
+ * A basic example of using the EventAnalog with 12bit ADC resolution (such as an ESP32).
  */
 #include <EventAnalog.h>
 
 
-const uint8_t analogPin = A0;;   //Change to suit your wiring, must be an analog pin
+const uint8_t analogPin = 2; //A0;;   //Change to suit your wiring, must be an analog pin
 
 
 /**
@@ -48,14 +48,14 @@ void onAnalogEvent(InputEventType et, EventAnalog& ea) {
 }
 
 
-EventAnalog myAnalog(analogPin); // Create an EventAnalog.
+EventAnalog myAnalog(analogPin, 12); // Create an EventAnalog, passing 12 for ESP32 ADC resolution
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   myAnalog.begin();
   delay(500);
-  Serial.println("EventAnalog Basic Example");
+  Serial.println("EventAnalog Basic Example for 12bit ADC");
   //Optionally initialise at the low end of the potentiometer
   myAnalog.setStartValue(0); //(any value from 0-1024)
   //You can reverse the position rather than change your wiring.

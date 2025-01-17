@@ -60,6 +60,15 @@ bool EventInputBase::isEventAllowed(InputEventType et) {
     return (excludedEvents[index] & (1 << position)) == 0; // Check if the corresponding bit is set
 }
 
+bool EventInputBase::isInvokable(InputEventType et) {
+    if ( callbackIsSet && isEventAllowed(et) ) {
+        if ( et > InputEventType::IDLE ) { //Check if exent is not ENABLE, DISABLED or IDLE
+            resetIdleTimer();    
+        }
+        return true;
+    }
+    return false;
+}
 
 void EventInputBase::enable(bool e ) {
     _enabled = e;

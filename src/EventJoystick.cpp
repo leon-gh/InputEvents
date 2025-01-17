@@ -10,8 +10,8 @@
 #include "EventJoystick.h"
 
 
-EventJoystick::EventJoystick(byte analogX, byte analogY)
-    : x(analogX), y(analogY) {
+EventJoystick::EventJoystick(byte analogX, byte analogY, uint8_t adcBits /*=10*/)
+    : x(analogX, adcBits), y(analogY, adcBits) {
         #ifdef FUNCTIONAL_SUPPORTED
         x.setCallback([&](InputEventType et, EventAnalog &enc) { onInputXCallback(et, enc); });
         y.setCallback([&](InputEventType et, EventAnalog &enc) { onInputYCallback(et, enc); });
@@ -21,15 +21,14 @@ EventJoystick::EventJoystick(byte analogX, byte analogY)
         y.setOwner(this);
         y.setCallback(EventJoystick::analogYCallback);
         #endif
-        setCentreBoundary(200);
-        /*
-         * readAnalog() will not work if object is contructed as global (like most sketches
-         * in the Arduino examples) so call setStartValues() in setup() if required.
-        */
-        setStartValues();
 }
 
-
+void EventJoystick::begin() {
+    x.begin();
+    y.begin();
+    setCentreBoundary(200);
+    setStartValues();
+}
 
 
 void EventJoystick::onInputCallback(InputEventType et, EventInputBase & ie) {
@@ -107,9 +106,9 @@ bool EventJoystick::hasChanged() {
 
 bool EventJoystick::isEnabled() { return x.isEnabled() && y.isEnabled(); }
 
-void EventJoystick::allowRead(bool allow) { 
-    x.allowRead(allow);
-    y.allowRead(allow);
+void EventJoystick::enableAutoCalibrate(bool allow) { 
+    x.enableAutoCalibrate(allow);
+    y.enableAutoCalibrate(allow);
 }
 
 
@@ -125,7 +124,7 @@ void EventJoystick::setRateLimit(uint16_t ms) {
 
 
 void EventJoystick::invoke(InputEventType et) {
-    if (isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }

@@ -37,6 +37,8 @@ public:
      */
     EventSwitch(byte switchPin);
 
+    void begin();
+
     void setCallback(CallbackFunction f) {
         callbackFunction = f;
         callbackIsSet = true;
@@ -83,6 +85,7 @@ public:
 
 private:
 
+    byte switchPin;
     Bounce* bounce;
     unsigned char currentState = HIGH;
     bool previousState = LOW;

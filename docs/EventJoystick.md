@@ -19,6 +19,7 @@ void onJoystickEvent(InputEventType et, EventJoystick& ej) {
 }
 void setup() {
     Serial.begin(9600);
+    myJoystick.begin();
     // Link the joystick's callback to function defined above
     myJoystick.setCallback(onJoystickEvent);
     myJoystick.setStartValues();
@@ -51,9 +52,18 @@ Construct an EventJoystick
 EventJoystick(byte analogPinX, byte analogPinY);
 ```
 
-## Class Methods
+The `analogPinX` and `analogPinY` parameters *must* be an analog pins. For ESP32 avoid using pins attached to ADC2 (GPIO 0, 2, 4, 12-15, 25-27) as these are shared by the WiFi module.
 
-In addition to the [common methods](Common.md#common-methods) the following are available for EventAnalog:
+For most boards this constructor will work fine but if your board has an ADC (analog to digital converter) resolution that is higher than the standard Arduino 10 bits, pass the resolution (in bits) of your board to the contructor:
+
+```cpp
+EventJoystick(byte analogPinX, byte analogPinY, uint8_t adcBits);
+```
+The Arduino Due, Zero, MKR; ESP32, ARM, SAMD & STM32 based boards all use 12 bit ADCs. Teensy boards have 12 bit ADCs but default to 10 bit.
+
+On boards with an ADC greater than 10 bits, the function [`analogReadResolution(bits)`](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogReadResolution/) can be used to change the ADC resolution.
+
+## Class Methods
 
 #### `void update()`
 
@@ -62,7 +72,13 @@ Must be called within `loop()`. See [common methods](Common.md#void-update) for 
 
 ### Setup
 
-Setup methods are typically called from within `setup()` but can be updated at runtime.
+Setup methods are typically called from within `setup()` but can also be updated at runtime.
+
+Only `begin()` and `setCallback()` are required methods.
+
+In most cases the methods below are not required but provide a range of options to change the configuration to suit your hardware and functional requirements.
+
+In addition to the [common methods](Common.md#common-methods) the following are available for EventJoystick:
 
 #### `void setCallback(CallbackFunction func)`
 
@@ -88,6 +104,9 @@ This sets a 'dead zone' in the centre of the joystick - very useful if the joyst
 #### `void setOuterBoundary(uint16_t width=100)`
 Set the outer boundary of the joystick. This is useful to 'trim' the corners of the joystick so you get the maximum position in a circumference rather than in the corners.
 
+
+#### `void enableAutoCalibrate(bool allow=true)`
+When enableAutoCalibrate is set to true (the default), will auto calibrate minValue and maxValue. This will be done even when input is disabled (ie no callbacks fired). Apllied to both x and y axis.
 
 All the [`EventAnalog` setup](EventAnalog.md#setup) methods are available for each axis via `myJoystick.x` and `myJoystick.y`.
 

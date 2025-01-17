@@ -39,6 +39,7 @@ public:
      */
     EventEncoderButton(byte encoderPin1, byte encoderPin2, byte buttonPin);
 
+    void begin();
 
     void setCallback(CallbackFunction f) {
         callbackFunction = f;

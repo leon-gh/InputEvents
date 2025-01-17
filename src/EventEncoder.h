@@ -42,6 +42,8 @@ public:
      */
     EventEncoder(uint8_t encoderPin1, uint8_t encoderPin2);
 
+    void begin();
+
     void setCallback(CallbackFunction f) {
         callbackFunction = f;
         callbackIsSet = true;
@@ -122,6 +124,8 @@ protected:
 
 private:
 
+    uint8_t encoderPin1;
+    uint8_t encoderPin2;
     Encoder* encoder;
 
     uint8_t positionDivider = 4;
@@ -130,13 +134,6 @@ private:
     unsigned int rateLimit = 0;
     unsigned long rateLimitCounter = 0;   
     int encoderIncrement  = 0;
-
-#if defined(ESP32) || defined(ESP8266)
-    uint8_t _encoderPin1;
-    uint8_t _encoderPin2;
-    bool _started = false;
-    void begin();
-#endif
 
 };
 

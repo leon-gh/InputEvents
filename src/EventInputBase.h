@@ -25,7 +25,7 @@ constexpr auto ACTUAL_DISABLED_VALUE=DISABLED;
 constexpr auto DISABLED=ACTUAL_DISABLED_VALUE;
 #endif
 
-constexpr size_t NUM_EVENT_TYPE_ENUMS = 15; 
+constexpr size_t NUM_EVENT_TYPE_ENUMS = 17; 
 enum class InputEventType : uint8_t {
     //Common
     ENABLED,
@@ -35,6 +35,8 @@ enum class InputEventType : uint8_t {
     PRESSED,
     RELEASED,
     CLICKED,
+    DOUBLE_CLICKED,
+    MULTI_CLICKED,
     LONG_CLICKED,
     LONG_PRESS,
     //Encoder, Analog
@@ -67,6 +69,11 @@ class EventInputBase {
 
 
     public:
+
+    /**
+     * Must be called from setup().
+     */
+    virtual void begin() = 0;
 
     /**
      * Unset the callback. Must be overriden in derived class & then base method called.
@@ -161,6 +168,15 @@ class EventInputBase {
 
 protected:
     bool callbackIsSet = false; //Required because in C/C++ callback has to be defined in derived classes... :-/
+
+    /**
+     * Returns true if an event can be invoked and if so, will also
+     * reset the idle timeout timer if events are not
+     * ENABLED, DISABLED or IDLE.
+     * If you don't want to reset the idle timer, use isEventAllowed()
+     * The assumption is you *will* invoke() if this returns true.
+     */
+    bool isInvokable(InputEventType et);
 
     virtual void invoke(InputEventType et) = 0;
 

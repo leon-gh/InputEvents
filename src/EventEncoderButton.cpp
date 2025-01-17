@@ -26,6 +26,11 @@ EventEncoderButton::EventEncoderButton(byte encoderPin1, byte encoderPin2, byte 
 
     }
 
+void EventEncoderButton::begin() {
+    encoder.begin();
+    button.begin();
+}
+
 void EventEncoderButton::unsetCallback() {
     callbackFunction = nullptr;
     EventInputBase::unsetCallback();
@@ -38,7 +43,7 @@ void EventEncoderButton::update() {
 
 
 void EventEncoderButton::invoke(InputEventType et) {
-    if (isEventAllowed(et) && callbackFunction != nullptr) {
+    if ( isInvokable(et) ) {
         callbackFunction(et, *this);
     }    
 }

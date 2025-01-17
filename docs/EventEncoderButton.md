@@ -36,6 +36,7 @@ void onEncoderButtonEvent(InputEventType et, EventEncoderButton& eeb) {
 }
 void setup() {
     Serial.begin(9600);
+    myEncoderButton.begin();
     // Link the encoder button's callback to function defined above
     myEncoderButton.setCallback(onEncoderButtonEvent);
 }
