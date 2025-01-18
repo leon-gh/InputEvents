@@ -38,6 +38,12 @@ void printEvent(InputEventType et) {
   case InputEventType::CLICKED :
     Serial.print("CLICKED");
     break;
+  case InputEventType::DOUBLE_CLICKED :
+    Serial.print("DOUBLE_CLICKED");
+    break;
+  case InputEventType::MULTI_CLICKED :
+    Serial.print("MULTI_CLICKED");
+    break;
   case InputEventType::LONG_CLICKED :
     Serial.print("LONG_CLICKED");
     break;
