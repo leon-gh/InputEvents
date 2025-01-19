@@ -28,7 +28,7 @@ Add the following to your `platformio.ini` file:
 lib_deps = 
 	thomasfredericks/Bounce2@^2.72
 	paulstoffregen/Encoder@^1.4.4
-	stutchbury/InputEvents@^1.1.0`
+	stutchbury/InputEvents@^1.1.0
 ```
 
 Please see [notes](docs/README.md#notes-on-using-paul-stoffregens-encoder-library) on using PJRC's Encoder library with InputEvents.
