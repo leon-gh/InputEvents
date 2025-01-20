@@ -39,8 +39,12 @@ See [example Switch.ino](../examples/Switch/Switch.ino) for a slightly more deta
 In addition to the [common events](Common.md#common-events) (Enabled, Disabled and Idle) the following event types are fired by EventSwitch:
 
 
+----
+
 #### `InputEventType::ON` 
 Will be fired after switch is turned on.
+
+----
 
 #### `InputEventType::OFF` 
 Will be fired after switch is turned off.
@@ -67,17 +71,25 @@ Must be called within `loop()`. See [common methods](Common.md#void-update) for 
 
 Setup methods are typically called from within `setup()` but can be updated at runtime.
 
+----
+
 #### `void setCallback(CallbackFunction func)`
 
 See [common methods](Common.md#void-setcallbackcallbackfunction-func) for details.
 
 
+----
+
 #### `void reverseOnOff(bool rev=true)`
 If your wiring is reversed, you can switch it with this method. The `ON` event is fired in place of the `OFF` event and vice versa. Default is `true` so pass `false` to return to 'normal' behaviour. 
+
+----
 
 #### `bool isOnOffReversed()`
 Returns true if on and off are reversed.
 
+
+----
 
 #### `void setDebounceInterval(unsigned int intervalMs)`
 Default is set in the Bounce2 library (currently 10ms)
@@ -94,12 +106,18 @@ Default is set in the Bounce2 library (currently 10ms)
 Returns true if the switch is on.
 
 
+----
+
 #### `bool isOff()`
 Returns true if the switch is off.
 
 
+----
+
 #### `unsigned long currentDuration()`
 Directly get the duration of the switch current state from Bounce2
+
+----
 
 #### `unsigned long previousDuration()`
 Directly get the previous duration of the switch previous state from Bounce2

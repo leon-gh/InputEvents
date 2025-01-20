@@ -54,8 +54,12 @@ See [example EncoderButton.ino](../examples/EncoderButton/EncoderButton.ino) for
 In addition to the [common events](Common.md#common-events) (Enabled, Disabled and Idle) and the [`EventEncoder`](EventEncoder.md) & [`EventButton`](EventButton.md) events, the following event types are fired by EventEncoderButton:
 
 
+----
+
 #### `InputEventType::CHANGED_PRESSED` 
 Will be fired on each change of encoder increment is pressed and turned.
+
+----
 
 #### `InputEventType::CHANGED_RELEASED` 
 Will be fired in place of the button's `RELEASED` event if the encoder is pressed and turned.
@@ -69,11 +73,6 @@ EventEncoder(byte encoderPin1, encoderPin2, buttonPin);
 ```
 
 ## Class Methods
-
-
-    long pressedPosition();
-
-
 
 In addition to the [common methods](Common.md#common-methods) the following are available for EventAnalog:
 

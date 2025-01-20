@@ -73,6 +73,7 @@ Setup methods are typically called from within `setup()` but can be updated at r
 
 See [common methods](Common.md#void-setcallbackcallbackfunction-func) for details.
 
+----
 
 #### `void setPositionDivider(uint8_t divider=4)`
 Quadrature encoders usually have four states for each 'click' of the rotary control, although some have just 2. Normally we only want to fire an event once per click so the default  positionDivider is 4.
@@ -81,12 +82,18 @@ You can set this to any positive integer eg 8 would increment the position every
 
 Affects pressed+turning too for the [`EventEncoderButton`](EventEncoderButton.md).
 
+----
+
 #### `uint8_t getPositionDivider()`
 Get the position divider.
+
+----
 
 #### `void resetPosition(long pos = 0)`
 Reset the counted position of the encoder. 
 
+
+----
 
 #### `void setRateLimit(uint16_t ms)`
 Encoder callbacks are normally fired on every loop() but for MPG style encoders this can fire a huge number of events (that may for example, swamp a serial connection).    
@@ -100,6 +107,8 @@ Set to zero (default) for no rate limit.
 
 #### `int16_t increment()`
 Returns a positive (CW) or negative (CCW) integer. Is normally 1 or -1 but if your loop() has lots of processing, your Arduino is slow or you `setRateLimit()` this will return the actual number of increments made by the encoder since the last encoder handler event.
+
+----
 
 #### `long position()`
 The current position of the encoder. Can be reset by `resetPosition()`.
