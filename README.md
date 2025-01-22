@@ -15,6 +15,10 @@ I am standing on the shoulders of giants.
 
 **Not heard of the term 'event' programming?** Here's a quick primer: [Event Programming 101](docs/EventProgramming101.md). It is by far the easiest way to get your project working with external controls.
 
+## SUPPORT
+
+Feedback and [bug reports](https://github.com/Stutchbury/InputEvents/issues) are welcome or chat on [Discord](https://discord.gg/GDcEcWPKKm) if you have any questions.
+
 ## INSTALLATION
 
 ### Arduino IDE
@@ -72,7 +76,7 @@ The [`EventEncoder`](docs/EventEncoder.md) class is used for plain encoders such
 
 ### [EventAnalog](docs/EventAnalog.md)
 
-The [`EventAnalog`](docs/EventAnalog.md) class is generally used for potentiometers but anything that normally connects to an analog pin will suffice. The analog input value is redefined as 'slices' so events are fire at specified thresholds rather than 1024 times over the range of the input.
+The [`EventAnalog`](docs/EventAnalog.md) class is generally used for potentiometers but anything that normally connects to an analog pin will suffice. The analog input value is redefined as a limited number of increments or 'slices' so events are fired at specified thresholds rather than 1024 times over the range of the input.
 
 ### [EventSwitch](docs/EventSwitch.md)
 
