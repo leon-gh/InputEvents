@@ -2,6 +2,7 @@
  * A basic example of using the EventEncoderButton.
  */
 #include <Encoder.h> 
+#include <PjrcEncoderAdapter.h>
 #include <EventEncoderButton.h>
 
 const uint8_t encoderPin1 = 2;  //must be in interrupt pin
@@ -91,7 +92,8 @@ void onEncoderButtonEvent(InputEventType et, EventEncoderButton& eeb) {
   Serial.println();
 }
 
-EventEncoderButton myEncoderButton(encoderPin1, encoderPin2, buttonPin); //Create and EventEncoderButton
+PjrcEncoderAdapter encoderAdapter(encoderPin1, encoderPin2); //Create an adapter for PJRC's Encoder.
+EventEncoderButton myEncoderButton(&encoderAdapter, buttonPin); //Create and EventEncoderButton
 
 void setup() {
   // put your setup code here, to run once:

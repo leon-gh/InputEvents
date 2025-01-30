@@ -4,7 +4,8 @@
  * button events and 'pressed changed' etc will not be fired. .
  * See the EventEncoderButton example for that.
  */
-#include <Encoder.h>
+#include <Encoder.h> //PJRC's Encoder library
+#include <PjrcEncoderAdapter.h> //Adapter for PJRC's Encoder
 #include <EventEncoder.h>
 
 const uint8_t encoderPin1 = 2;  //must be in interrupt pin
@@ -54,7 +55,8 @@ void onEncoderEvent(InputEventType et, EventEncoder& ee) {
   Serial.println();
 }
 
-EventEncoder myEncoder(encoderPin1, encoderPin2); //Create an EventEncoder
+PjrcEncoderAdapter encoderAdapter(encoderPin1, encoderPin2); //Create an adapter for PJRC's Encoder.
+EventEncoder myEncoder(&encoderAdapter); //Create an EventEncoder
 
 void setup() {
   // put your setup code here, to run once:
