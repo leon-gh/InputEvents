@@ -16,7 +16,36 @@
 If you're new to the concept of event programming, [here is a short primer](EventProgramming101.md). It will make coding your project so much easier!
 
 ----
+
+## Encoder Adapter Notes
+
+Since v1.2.0, you can use almost any encoder library via an [EncoderAdapter](https://github.com/Stutchbury/EncoderAdapter). 
+
+Currently an adapter is provided for PJRC's Encoder but more will be added or you can write your own.
+
+See the [PJRC one](https://github.com/Stutchbury/EncoderAdapter/blob/main/src/PjrcEncoderAdapter.cpp) as an example of how simple it is! If you want to share your adapter, I will add it the the EncoderAdapter library.
+
+These changes mean that rather than passing the encoder pins to the `EventEncoder` or `EventEncoderButton` constructors, we pass an EncoderAdapter that has been previously constructed from the pins.
+
+You must include both the appropriate encoder library and its adapter in your sketches.
+
+eg:
+
+```
+#include <Encoder.h> //PJRC's lib
+#include <PjrcEncoderAdapter.h>
+```
+and then:
+```
+PjrcEncoderAdapter encoderAdapter(2,3); //Should be interrupt pins
+EventEncoder myEncoder(&encoderAdapter);
+```
+
+----
+
 ## Notes on using Paul Stoffregen's Encoder Library
+
+> Since v1.2.0, Paul's Encoder Library remains the default but you can now use different encoder libraries with `InputEvents`. See Encoder Adapter Notes above.
 
 Please take care to read the pin requirements in the [official documantation page](https://www.pjrc.com/teensy/td_libs_Encoder.html) (TLDR; use interupt pins). The github repository is [here](https://github.com/paulstoffregen/Encoder).
 
@@ -31,13 +60,8 @@ I have tested with:
 
 Encoder supports far more boards than I have available for testing but if your board is not supported, the [`EventEncoder`](EventEncoder.md) and [`EventEncoderButton`](EventEncoderButton.md) classes will be excluded if you do not have PJRC's Encoder library installed in your project.
 
-In the Arduino IDE you must expicitly `#include <Encoder.h>` before `EventEncoder.h` or `EventEncoderButton.h` in your sketches.
-
-PlatformIO will automatically `#include <Encoder.h>` if the library is installed in your project.
-
-I have taken the decision to not have PJRC's Encoder as a 'hard' dependency so the rest of the InputEvents library can be used even if your board is not supported by Encoder. At some point I will try to investigate using additional/alternative encoder libraries (looking at you RPI2040) but pull requests would be more than welcome.
-
 ----
+
 
 ## Testing
 

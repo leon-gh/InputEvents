@@ -22,7 +22,7 @@ Feedback and [bug reports](https://github.com/Stutchbury/InputEvents/issues) are
 ## INSTALLATION
 
 ### Arduino IDE
-Install the `InputEvents` and `Encoder` libraries via the Arduino IDE Libary Manager. `Bounce2` should automatically install, but if it doesn't install that too. 
+Install the `InputEvents` and `Encoder` libraries via the Arduino IDE Libary Manager. `Bounce2` and `EncoderAdapter` should automatically install, but if it doesn't install them too. 
 
 
 ### PlatformIO
@@ -32,10 +32,13 @@ Add the following to your `platformio.ini` file:
 lib_deps = 
 	thomasfredericks/Bounce2@^2.72
 	paulstoffregen/Encoder@^1.4.4
-	stutchbury/InputEvents@^1.1.0
+	stutchbury/InputEvents@^1.2.0
 ```
 
-Please see [notes](docs/README.md#notes-on-using-paul-stoffregens-encoder-library) on using PJRC's Encoder library with InputEvents.
+`EncoderAdapter` should automatically install as a dependency of `InputEvents`.
+
+
+Please see [Encoder Adapter Notes](docs/README.md#encoder-adapter-notes) on using encoder libraries and [additional notes](docs/README.md#notes-on-using-paul-stoffregens-encoder-library) on using PJRC's Encoder library with InputEvents.
 
 ## BASIC USAGE
 

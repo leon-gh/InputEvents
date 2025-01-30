@@ -14,10 +14,13 @@ Huge thanks to Paul - again, I am standing on the shoulders of giants.
 Note: In the Arduino IDE, you must explicitly `#include <Encoder.h>` before `EventEncoder.h`. In PlatformIO, InputEvents will include it for you if you have PJRC's Encoder library installed in your project.
 
 ```cpp
-#include <Encoder.h>
+#include <Encoder.h> //PJRC's Encoder library
+#include <PjrcEncoderAdapter.h> //Adapter for PJRC's Encoder
 #include <EventEncoder.h>
-// Create an EventEncoder input
-EventEncoder myEncoder(2,3); //Should be interrupt pins
+//Create an adapter for PJRC's Encoder.
+PjrcEncoderAdapter encoderAdapter(2,3); //Should be interrupt pins
+//Create an EventEncoder passing the adapter
+EventEncoder myEncoder(&encoderAdapter);
 // Create a callback handler function
 void onEncoderEvent(InputEventType et, EventEncoder& ee) {
     Serial.print("Encoder event fired. Position is: ");
@@ -52,7 +55,7 @@ Will be fired on each change of encoder increment.
 
 Construct an EventEncoder
 ```cpp
-EventEncoder(byte encoderPin1, encoderPin2);
+EventEncoder(EncoderAdapter encoderAdapter);
 ```
 
 ## Class Methods

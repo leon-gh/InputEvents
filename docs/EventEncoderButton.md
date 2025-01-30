@@ -23,10 +23,13 @@ When the encoder is not pressed and turned, its button behaves just like a regul
 Note: In the Arduino IDE, you must explicitly `#include <Encoder.h>` before `EventEncoderButton.h`. In PlatformIO, InputEvents will include it for you if you have PJRC's Encoder library installed in your project.
 
 ```cpp
-#include <Encoder.h>
+#include <Encoder.h> //PJRC's Encoder library
+#include <PjrcEncoderAdapter.h> //Adapter for PJRC's Encoder
 #include <EventEncoderButton.h>
+//Create an adapter for PJRC's Encoder.
+PjrcEncoderAdapter encoderAdapter(2,3); //Should be interrupt pins
 // Create an EventEncoderButton input
-EventEncoderButton myEncoderButton(2,3, 7); //First two should be interrupt pins
+EventEncoderButton myEncoderButton(&encoderAdapter, 7);
 // Create a callback handler function
 void onEncoderButtonEvent(InputEventType et, EventEncoderButton& eeb) {
     Serial.print("Encoder button event fired. Position is: ");
@@ -69,7 +72,7 @@ Will be fired in place of the button's `RELEASED` event if the encoder is presse
 
 Construct an EventEncoderButton
 ```cpp
-EventEncoder(byte encoderPin1, encoderPin2, buttonPin);
+EventEncoder(EncoderAdapter encoderAdapter, buttonPin);
 ```
 
 ## Class Methods
