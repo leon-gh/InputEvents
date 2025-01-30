@@ -37,7 +37,7 @@ public:
     /**
      * Construct a rotary encoder button
      */
-    EventEncoderButton(byte encoderPin1, byte encoderPin2, byte buttonPin);
+    EventEncoderButton(EncoderAdapter *encoderAdapter, byte buttonPin);
 
     void begin();
 

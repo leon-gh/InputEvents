@@ -25,7 +25,7 @@ constexpr auto ACTUAL_DISABLED_VALUE=DISABLED;
 constexpr auto DISABLED=ACTUAL_DISABLED_VALUE;
 #endif
 
-constexpr size_t NUM_EVENT_TYPE_ENUMS = 17; 
+constexpr size_t NUM_EVENT_TYPE_ENUMS = 19; 
 enum class InputEventType : uint8_t {
     //Common
     ENABLED,
@@ -49,7 +49,10 @@ enum class InputEventType : uint8_t {
     CHANGED_Y,
     //Switch
     ON,
-    OFF
+    OFF,
+    //TouchScreen
+    DRAG,
+    DRAGGED
 };
 
 

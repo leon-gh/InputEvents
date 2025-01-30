@@ -15,11 +15,7 @@
 
 #include "Arduino.h"
 #include "EventInputBase.h"
-
-//Standing on the shoulders of giants
-// http://www.pjrc.com/teensy/td_libs_Encoder.html
-#include <Encoder.h>
-
+#include <EncoderAdapter.h>
 
 class EventEncoder : public EventInputBase {
 
@@ -40,7 +36,10 @@ public:
     /**
      * Construct a rotary encoder
      */
-    EventEncoder(uint8_t encoderPin1, uint8_t encoderPin2);
+    //EventEncoder(uint8_t encoderPin1, uint8_t encoderPin2);
+    EventEncoder(EncoderAdapter *encoderAdapter);
+
+    ~EventEncoder();
 
     void begin();
 
@@ -124,9 +123,7 @@ protected:
 
 private:
 
-    uint8_t encoderPin1;
-    uint8_t encoderPin2;
-    Encoder* encoder;
+    EncoderAdapter *encoder;
 
     uint8_t positionDivider = 4;
     int32_t currentPosition  = 0;
