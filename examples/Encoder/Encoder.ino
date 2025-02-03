@@ -4,13 +4,21 @@
  * button events and 'pressed changed' etc will not be fired. .
  * See the EventEncoderButton example for that.
  */
+
+//First include your chosen encoder library
 #include <Encoder.h> //PJRC's Encoder library
+//Then include the adapter for your chosen encoder library
 #include <PjrcEncoderAdapter.h> //Adapter for PJRC's Encoder
+//Then include EventEncoder
 #include <EventEncoder.h>
 
 const uint8_t encoderPin1 = 2;  //must be in interrupt pin
 const uint8_t encoderPin2 = 3;  //should be in interrupt pin
 
+//Create an encoder adapter
+PjrcEncoderAdapter encoderAdapter(encoderPin1, encoderPin2); //Adapter for PJRC's Encoder.
+//Create the EventEncoder, passing a reference to the adapter
+EventEncoder myEncoder(&encoderAdapter); //Create an EventEncoder
 
 /**
  * Utility function to print the encoder events to Serial.
@@ -54,9 +62,6 @@ void onEncoderEvent(InputEventType et, EventEncoder& ee) {
   }
   Serial.println();
 }
-
-PjrcEncoderAdapter encoderAdapter(encoderPin1, encoderPin2); //Create an adapter for PJRC's Encoder.
-EventEncoder myEncoder(&encoderAdapter); //Create an EventEncoder
 
 void setup() {
   // put your setup code here, to run once:
