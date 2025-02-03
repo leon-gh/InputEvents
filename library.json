@@ -21,7 +21,7 @@
   "homepage": "https://github.com/Stutchbury/InputEvents/",
   "dependencies": {
     "thomasfredericks/Bounce2": "2.71",
-    "stutchbury/EncoderAdapter": "^0.5.1"
+    "stutchbury/EncoderAdapter": "^0.5.2"
   },
   "frameworks": "Arduino",
   "platforms": "*"
