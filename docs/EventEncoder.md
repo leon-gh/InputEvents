@@ -2,7 +2,7 @@
 
 The [`EventEncoder`](EventEncoder.md) class is for quadrature encoder inputs providing the position & encoder increment, event rate limiting without losing steps (eg for easy acceleration or to reduce events sent over Serial). 
 
-It is effectively an event wrapper for Paul Stoffregen's [Encoder library](https://www.pjrc.com/teensy/td_libs_Encoder.html)
+It is effectively an event wrapper around a low level encoder library. By default, Paul Stoffregen's [Encoder library](https://www.pjrc.com/teensy/td_libs_Encoder.html) is used but adapters can easily be created for others (and more will be added).
 
 Huge thanks to Paul - again, I am standing on the shoulders of giants.
 
@@ -11,15 +11,20 @@ Huge thanks to Paul - again, I am standing on the shoulders of giants.
 
 ## Basic Usage
 
-Note: In the Arduino IDE, you must explicitly `#include <Encoder.h>` before `EventEncoder.h`. In PlatformIO, InputEvents will include it for you if you have PJRC's Encoder library installed in your project.
+> Note: Unlike other inputs, `EventEncoder` and `EventEncoderButton` are not directly linked to the pins but through an `EncoderAdapter`. This allows the classes to use different underlying encoder libraries. 
+ 
+You must explicitly `#include` both the chosen encoder library and its adapter and then pass the adapter to the `EventEncoder`:
 
 ```cpp
+//First include your chosen encoder library
 #include <Encoder.h> //PJRC's Encoder library
+//Then include the adapter for the encoder library
 #include <PjrcEncoderAdapter.h> //Adapter for PJRC's Encoder
+//Then include EventEncoder
 #include <EventEncoder.h>
 //Create an adapter for PJRC's Encoder.
 PjrcEncoderAdapter encoderAdapter(2,3); //Should be interrupt pins
-//Create an EventEncoder passing the adapter
+//Create an EventEncoder, passing a reference to the adapter
 EventEncoder myEncoder(&encoderAdapter);
 // Create a callback handler function
 void onEncoderEvent(InputEventType et, EventEncoder& ee) {
