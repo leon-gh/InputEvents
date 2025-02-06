@@ -50,6 +50,7 @@ void EventButton::update() {
         }
         //fire long press callbacks
         if (LOW == bounce->read()) {
+            resetIdleTimer();
             if (bounce->currentDuration() > (uint16_t)(longClickDuration + (longPressCounter * longPressInterval ))) {
                 longPressCounter++;
                 if ((repeatLongPress || longPressCounter == 1) ) {
