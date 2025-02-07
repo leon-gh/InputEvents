@@ -1,12 +1,14 @@
 
 
-#ifndef INPUT_EVENTS_DEFINES_H
-#define INPUT_EVENTS_DEFINES_H
+#ifndef INPUT_EVENTS_H
+#define INPUT_EVENTS_H
 
 
-#if defined(__has_include) // Check if __has_include is supported
-    #if __has_include(<functional>)
-        #define FUNCTIONAL_SUPPORTED
+#ifndef FUNCTIONAL_SUPPORTED
+    #if defined(__has_include) // Check if __has_include is supported
+        #if __has_include(<functional>)
+            #define FUNCTIONAL_SUPPORTED
+        #endif
     #endif
 #endif
 
