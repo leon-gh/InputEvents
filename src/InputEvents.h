@@ -1,17 +1,25 @@
+/**
+ *
+ * GPLv2 Licence https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+ * 
+ * Copyright (c) 2024 Philip Fletcher <philip.fletcher@stutchbury.com>
+ * 
+ */
+
+#ifndef INPUT_EVENTS_H
+#define INPUT_EVENTS_H
 
 
-#ifndef INPUT_EVENTS_DEFINES_H
-#define INPUT_EVENTS_DEFINES_H
-
-
-#if defined(__has_include) // Check if __has_include is supported
-    #if __has_include(<functional>)
-        #define FUNCTIONAL_SUPPORTED
+#ifndef FUNCTIONAL_SUPPORTED
+    #if defined(__has_include) // Check if __has_include is supported
+        #if __has_include(<functional>)
+            #define FUNCTIONAL_SUPPORTED
+        #endif
     #endif
 #endif
 
 #if defined(__has_include) // Check if __has_include is supported
-    #if !__has_include(<EncoderAdapter.h>)
+    #if !__has_include(<Encoder.h>)
         #ifndef EXCLUDE_EVENT_ENCODER //might be defined by build_flags
             #define EXCLUDE_EVENT_ENCODER
         #endif
