@@ -17,11 +17,19 @@
 /**
  * Construct a rotary encoder
  */
-EventEncoder::EventEncoder(uint8_t pin1, uint8_t pin2) 
-    : encoderPin1(pin1), encoderPin2(pin2) { }
+// EventEncoder::EventEncoder(uint8_t pin1, uint8_t pin2) 
+//     : encoderPin1(pin1), encoderPin2(pin2) { }
+
+EventEncoder::EventEncoder(EncoderAdapter *encoderAdapter) {
+    encoder = encoderAdapter;
+}
+
+EventEncoder::~EventEncoder() {
+    delete encoder;
+}
 
 void EventEncoder::begin() {
-    encoder = new Encoder(encoderPin1, encoderPin2); 
+    encoder->begin(); // = new Encoder(encoderPin1, encoderPin2); 
 }
 
 void EventEncoder::invoke(InputEventType et) {
@@ -35,7 +43,7 @@ void EventEncoder::onEnabled() {
     //Reset the encoder so we don't trigger other events
     //idleFlagged = true;
     //encoder->write(encoderPosition*positionDivider);
-    encoder->write(currentPosition*positionDivider);
+    encoder->setPosition(currentPosition*positionDivider);
     invoke(InputEventType::ENABLED);
 }
 
@@ -61,13 +69,13 @@ void EventEncoder::update() {
 }
 
 void EventEncoder::readIncrement() {
-    long newPosition = floor(encoder->read()/positionDivider);
+    long newPosition = floor(encoder->getPosition()/positionDivider);
     encoderIncrement = newPosition - oldPosition;
     oldPosition = newPosition;
 }
 
 #else 
 
-#pragma message("Info: EventEncoder and EventEncoderButton excluded from your build. Install PJRC's Encoder library and #include <Encoder.h> to resolve.")
+#pragma message("Info: EventEncoder and EventEncoderButton excluded from your build. Install the EncoderAdapter library, an Encoder library and #include the required adapter class (eg <PjrcEncoderAdapter.h>) to resolve.")
 
 #endif

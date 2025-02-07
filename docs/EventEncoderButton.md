@@ -5,7 +5,7 @@ The [`EventEncoderButton`](EventEncoderButton.md) class combines the [`EventEnco
 
 The class provides all the encoder events with the addition of `CHANGED_PRESSED` which is fired when the encoder is pressed and turned. 
 
-All the [`EventButton`](EventButton.md) events are also fired but if the encoder is turned while pressed the following changes to events occurs:
+All the [`EventButton`](EventButton.md) events are also fired but if the encoder is turned while pressed the following changes to events occur:
 
 - on release, the button's `RELEASED` event is translated to a `CHANGED_RELEASED` event.
 - the `LONG_PRESS` is not fired.
@@ -20,13 +20,21 @@ When the encoder is not pressed and turned, its button behaves just like a regul
 
 ## Basic Usage
 
-Note: In the Arduino IDE, you must explicitly `#include <Encoder.h>` before `EventEncoderButton.h`. In PlatformIO, InputEvents will include it for you if you have PJRC's Encoder library installed in your project.
+> Note: Unlike other inputs, `EventEncoderButton` and `EventEncoder` are not directly linked to the pins but through an `EncoderAdapter`. This allows the classes to use different underlying encoder libraries. 
+ 
+You must explicitly `#include` both the chosen encoder library and its adapter and then pass the adapter to the `EventEncoderButton`:
 
 ```cpp
-#include <Encoder.h>
+//First include your chosen encoder library
+#include <Encoder.h> //PJRC's Encoder library
+//Then include the adapter for the encoder library
+#include <PjrcEncoderAdapter.h> //Adapter for PJRC's Encoder
+//Then include EventEncoderButton
 #include <EventEncoderButton.h>
-// Create an EventEncoderButton input
-EventEncoderButton myEncoderButton(2,3, 7); //First two should be interrupt pins
+//Create an adapter for PJRC's Encoder.
+PjrcEncoderAdapter encoderAdapter(2,3); //Should be interrupt pins
+// Create an EventEncoderButton, passing a reference to the adapter
+EventEncoderButton myEncoderButton(&encoderAdapter, 7);
 // Create a callback handler function
 void onEncoderButtonEvent(InputEventType et, EventEncoderButton& eeb) {
     Serial.print("Encoder button event fired. Position is: ");
@@ -69,7 +77,7 @@ Will be fired in place of the button's `RELEASED` event if the encoder is presse
 
 Construct an EventEncoderButton
 ```cpp
-EventEncoder(byte encoderPin1, encoderPin2, buttonPin);
+EventEncoder(EncoderAdapter encoderAdapter, buttonPin);
 ```
 
 ## Class Methods

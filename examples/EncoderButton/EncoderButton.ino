@@ -1,13 +1,21 @@
 /**
  * A basic example of using the EventEncoderButton.
  */
-#include <Encoder.h> 
+//First include your chosen encoder library
+#include <Encoder.h>  //PJRC's Encoder library
+//Then include the adapter for your chosen encoder library
+#include <PjrcEncoderAdapter.h> //Adapter for PJRC's Encoder
+//Then include EventEncoderButton
 #include <EventEncoderButton.h>
 
 const uint8_t encoderPin1 = 2;  //must be in interrupt pin
 const uint8_t encoderPin2 = 3;  //should be in interrupt pin
 const uint8_t buttonPin = 7;  //change to suit your wiring
 
+//Create an encoder adapter
+PjrcEncoderAdapter encoderAdapter(encoderPin1, encoderPin2); //Adapter for PJRC's Encoder.
+//Create the EventEncoderButton, passing a reference to the adapter
+EventEncoderButton myEncoderButton(&encoderAdapter, buttonPin);
 
 /**
  * Utility function to print the encoder button events to Serial.
@@ -90,8 +98,6 @@ void onEncoderButtonEvent(InputEventType et, EventEncoderButton& eeb) {
   }
   Serial.println();
 }
-
-EventEncoderButton myEncoderButton(encoderPin1, encoderPin2, buttonPin); //Create and EventEncoderButton
 
 void setup() {
   // put your setup code here, to run once:

@@ -12,8 +12,8 @@
 #ifndef EXCLUDE_EVENT_ENCODER
 
 
-EventEncoderButton::EventEncoderButton(byte encoderPin1, byte encoderPin2, byte buttonPin)
-    : encoder(encoderPin1, encoderPin2), button(buttonPin) {
+EventEncoderButton::EventEncoderButton(EncoderAdapter *encoderAdapter, byte buttonPin)
+    : encoder(encoderAdapter), button(buttonPin) {
         #ifdef FUNCTIONAL_SUPPORTED
         encoder.setCallback([&](InputEventType et, EventEncoder &enc) { onInputCallback(et, enc); });
         button.setCallback([&](InputEventType et, EventButton &btn) { onInputCallback(et, btn); });
