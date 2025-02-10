@@ -102,6 +102,6 @@ bool EventButton::isPressed() { return buttonState() == LOW; }
 
 void EventButton::setDebounceInterval(unsigned int intervalMs) { bounce->interval(intervalMs); }
 
-unsigned long EventButton::currentDuration() { return bounce->currentDuration(); }
+uint32_t EventButton::currentDuration() { return bounce->currentDuration(); }
 
-unsigned long EventButton::previousDuration() { return bounce->previousDuration(); }
+uint32_t EventButton::previousDuration() { return bounce->previousDuration(); }
