@@ -21,13 +21,13 @@
     #endif
 #endif
 
-// #if defined(__has_include) // Check if __has_include is supported
-//     #if !__has_include(<EncoderAdapter.h>)
-//         #ifndef EXCLUDE_EVENT_ENCODER //might be defined by build_flags
-//             #define EXCLUDE_EVENT_ENCODER
-//         #endif
-//     #endif
-// #endif
+#if defined(__has_include) // Check if __has_include is supported
+    #if !__has_include(<EncoderAdapter.h>)
+        #ifndef EXCLUDE_EVENT_ENCODER //might be defined by build_flags
+            #define EXCLUDE_EVENT_ENCODER
+        #endif
+    #endif
+#endif
 
 
 /// \cond DO_NOT_DOCUMENT
