@@ -129,9 +129,9 @@ void EventEncoderButton::setLongPressInterval(unsigned int intervalMs) { button.
 
 unsigned char EventEncoderButton::clickCount() { return button.clickCount(); }
 
-unsigned long EventEncoderButton::currentDuration() { return button.currentDuration(); }
+uint32_t EventEncoderButton::currentDuration() { return button.currentDuration(); }
 
-unsigned long EventEncoderButton::previousDuration() { return button.previousDuration(); }
+uint32_t EventEncoderButton::previousDuration() { return button.previousDuration(); }
 
 uint8_t EventEncoderButton::longPressCount() { return button.longPressCount(); }
 
