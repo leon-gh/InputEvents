@@ -1,5 +1,5 @@
 # InputEvents Library
-An easy to use but comprehensive Arduino Event Library for both pysical and logical Buttons, Encoders, Encoder Buttons, Analog Inputs, Joysticks and Switches. Tested on Arduino, ESP and Teensy.
+An easy to use but comprehensive Arduino Event Library for both physical and logical Buttons, Encoders, Encoder Buttons, Analog Inputs, Joysticks and Switches. Tested on Arduino, ESP and Teensy.
 
 ![Picture of button, encoder, potentiometer, joystick and switch](images/all-inputs.png)
 
@@ -22,10 +22,13 @@ I am standing on the shoulders of giants.
 
 Feedback and [bug reports](https://github.com/Stutchbury/InputEvents/issues) are welcome or chat on [Discord](https://discord.gg/GDcEcWPKKm) if you have any questions.
 
+> If you're in a hurry, please see the [full Doxygen generated API documentation](https://stutchbury.github.io/InputEvents/api/index.html).
+
+
 ## INSTALLATION
 
 ### Arduino IDE
-Install the `InputEvents` and `Encoder` libraries via the Arduino IDE Libary Manager. `Bounce2` and `EncoderAdapter` should automatically install, but if it doesn't install them too. 
+Install the `InputEvents` and `Encoder` libraries via the Arduino IDE Libary Manager. `Bounce2` and `EncoderAdapter` should automatically install, but if they don't, install them too. 
 
 
 ### PlatformIO
@@ -38,7 +41,10 @@ lib_deps =
 	stutchbury/InputEvents@^1.2.0
 ```
 
-`EncoderAdapter` should automatically install as a dependency of `InputEvents`.
+`Bounce2` and `EncoderAdapter` should automatically install as a dependencies of `InputEvents`.
+
+Paul Stoffregen's Encoder library is the default for EventEncoder and EventEncoderButton but is not a hard dependency so will need to be installed separately.
+
 
 ## BASIC USAGE
 
@@ -87,7 +93,7 @@ The [`EventSwitch`](docs/EventSwitch.md) class is for plain on/off switches or i
 
 ### [EventEncoderButton](docs/EventEncoderButton.md)
 
-The [`EventEncoderButton`](docs/EventEncoderButton.md) class contains an [`EventEncoder`](docs/EventEncoder.md) and an [`EventButton`](docs/EventButton.md). Certain button events are changed is the encoder if pressed and turned. See [InputEventType section](#inputeventtype) below for an overview.
+The [`EventEncoderButton`](docs/EventEncoderButton.md) class contains an [`EventEncoder`](docs/EventEncoder.md) and an [`EventButton`](docs/EventButton.md). Certain button events are changed if the encoder is turned while pressed. See [InputEventType section](#inputeventtype) below for an overview.
 
 ### [EventJoystick](docs/EventJoystick.md)
 

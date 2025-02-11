@@ -57,54 +57,10 @@ void loop() {
 See [example EncoderButton.ino](../examples/EncoderButton/EncoderButton.ino) for a slightly more detailed sketch.
 
 
-## Event Types
-
-In addition to the [common events](Common.md#common-events) (Enabled, Disabled and Idle) and the [`EventEncoder`](EventEncoder.md) & [`EventButton`](EventButton.md) events, the following event types are fired by EventEncoderButton:
+See [Encoder Adapter Notes](docs/README.md#encoder-adapter-notes) on using encoder libraries and [additional notes](docs/README.md#notes-on-using-paul-stoffregens-encoder-library) on using PJRC's Encoder library with InputEvents.
 
 
-----
+## API Docs 
 
-#### `InputEventType::CHANGED_PRESSED` 
-Will be fired on each change of encoder increment is pressed and turned.
-
-----
-
-#### `InputEventType::CHANGED_RELEASED` 
-Will be fired in place of the button's `RELEASED` event if the encoder is pressed and turned.
-
-
-## Constructor
-
-Construct an EventEncoderButton
-```cpp
-EventEncoder(EncoderAdapter encoderAdapter, buttonPin);
-```
-
-## Class Methods
-
-In addition to the [common methods](Common.md#common-methods) the following are available for EventAnalog:
-
-#### `void update()`
-
-Must be called within `loop()`. See [common methods](Common.md#void-update) for details.
-
-
-### Setup
-
-Setup methods are typically called from within `setup()` but can be updated at runtime.
-
-#### `void resetPressedPosition(long pos = 0)`
-Reset the counted position of the encoder. 
-
-Please see [`EventEncoder` setup](EventEncoder.md#setup) and [`EventButton` setup](EventButton.md#setup) documentation for details about the other setup methods.
-
-### State
-
-#### `long pressedPosition()`
-The current pressed position of the encoder. Can be reset by `resetPressedPosition()`.
-
-
-Please see [`EventEncoder` state](EventEncoder.md#setup) and [`EventButton` sstate](EventButton.md#setup) documentation for details about the other state methods.
-
-
+See EventEncoderButton's [full Doxygen generated API documentation](https://stutchbury.github.io/InputEvents/api/classEventEncoderButton.html) for more information.
 

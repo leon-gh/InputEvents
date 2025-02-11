@@ -45,80 +45,9 @@ void loop() {
 
 See [example Encoder.ino](../examples/Encoder/Encoder.ino) for a slightly more detailed sketch.
 
+Please see [Encoder Adapter Notes](docs/README.md#encoder-adapter-notes) on using encoder libraries and [additional notes](docs/README.md#notes-on-using-paul-stoffregens-encoder-library) on using PJRC's Encoder library with InputEvents.
 
-## Event Types
+## API Docs
 
-In addition to the [common events](Common.md#common-events) (Enabled, Disabled and Idle) the following event types are fired by EventEncoder:
-
-
-#### `InputEventType::CHANGED` 
-Will be fired on each change of encoder increment.
-
-
-
-## Constructor
-
-Construct an EventEncoder
-```cpp
-EventEncoder(EncoderAdapter encoderAdapter);
-```
-
-## Class Methods
-
-In addition to the [common methods](Common.md#common-methods) the following are available for EventAnalog:
-
-#### `void update()`
-
-Must be called within `loop()`. See [common methods](Common.md#void-update) for details.
-
-
-
-### Setup
-
-Setup methods are typically called from within `setup()` but can be updated at runtime.
-
-#### `void setCallback(CallbackFunction func)`
-
-See [common methods](Common.md#void-setcallbackcallbackfunction-func) for details.
-
-----
-
-#### `void setPositionDivider(uint8_t divider=4)`
-Quadrature encoders usually have four states for each 'click' of the rotary control, although some have just 2. Normally we only want to fire an event once per click so the default  positionDivider is 4.
-
-You can set this to any positive integer eg 8 would increment the position every 2 clicks. 
-
-Affects pressed+turning too for the [`EventEncoderButton`](EventEncoderButton.md).
-
-----
-
-#### `uint8_t getPositionDivider()`
-Get the position divider.
-
-----
-
-#### `void resetPosition(long pos = 0)`
-Reset the counted position of the encoder. 
-
-
-----
-
-#### `void setRateLimit(uint16_t ms)`
-Encoder callbacks are normally fired on every loop() but for MPG style encoders this can fire a huge number of events (that may for example, swamp a serial connection).    
-The encoder interupts will still be called but this setting will limit the call back firing to every set ms - read the `EventEncoder.increment()` for lossless counting of encoder.   
-This is also how you can easily implement acceleration - simply set an appropriate rate limit and then multiply `increment() * increment()` in your callback function. 
-Set to zero (default) for no rate limit.
-
-
-
-### State
-
-#### `int16_t increment()`
-Returns a positive (CW) or negative (CCW) integer. Is normally 1 or -1 but if your loop() has lots of processing, your Arduino is slow or you `setRateLimit()` this will return the actual number of increments made by the encoder since the last encoder handler event.
-
-----
-
-#### `long position()`
-The current position of the encoder. Can be reset by `resetPosition()`.
-
+See EventEncoder's [Doxygen generated API documentation](https://stutchbury.github.io/InputEvents/api/classEventEncoder.html) for more information.
 
