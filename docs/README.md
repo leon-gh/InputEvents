@@ -19,7 +19,7 @@ If you're new to the concept of event programming, [here is a short primer](Even
 
 ## Encoder Adapter Notes
 
-Since v1.2.0, you can use almost any encoder library via an [EncoderAdapter](https://github.com/Stutchbury/EncoderAdapter). 
+Since v1.2.1, you can use almost any encoder library via an [EncoderAdapter](https://github.com/Stutchbury/EncoderAdapter). 
 
 Currently an adapter is provided for PJRC's Encoder but more will be added or you can write your own.
 
@@ -45,7 +45,7 @@ EventEncoder myEncoder(&encoderAdapter);
 
 ## Notes on using Paul Stoffregen's Encoder Library
 
-> Since v1.2.0, Paul's Encoder Library remains the default but you can now use different encoder libraries with `InputEvents`. See Encoder Adapter Notes above.
+> Since v1.2.1, Paul's Encoder Library remains the default but you can now use different encoder libraries with `InputEvents`. See Encoder Adapter Notes above.
 
 Please take care to read the pin requirements in the [official documantation page](https://www.pjrc.com/teensy/td_libs_Encoder.html) (TLDR; use interupt pins). The github repository is [here](https://github.com/paulstoffregen/Encoder).
 
