@@ -38,7 +38,7 @@ Add the following to your `platformio.ini` file:
 lib_deps = 
 	thomasfredericks/Bounce2@^2.72
 	paulstoffregen/Encoder@^1.4.4
-	stutchbury/InputEvents@^1.2.1
+	stutchbury/InputEvents@^1.3.0
 ```
 
 `Bounce2` and `EncoderAdapter` should automatically install as a dependencies of `InputEvents`.
