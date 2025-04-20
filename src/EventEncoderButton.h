@@ -222,7 +222,7 @@ public:
      * - If either setMinPosition() or setMaxPosition() are non zero, the limits will be applied to position()
      * - If either setMinPressedPosition() or setMaxPressedPosition() are non zero, the limits will be applied to pressedPosition()
      * 
-     * There are two behaviours defined by wrapMinMaxPosition() and wrapMinMaxPressedPosition(). The deafault (false) is to not wrap.
+     * There are two behaviours defined by wrapMinMaxPosition() and wrapMinMaxPressedPosition(). The default (false) is to not wrap.
      * 
      */
 
