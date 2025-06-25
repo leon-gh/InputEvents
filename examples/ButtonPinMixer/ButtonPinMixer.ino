@@ -1,17 +1,25 @@
 /**
- * A basic example of using the EventButton with a standard GPIO pin.
+ * An example of using the EventButton with a PinMixerAdapter.
  * 
  * It will automatically enable debouncing.
  *
- * When the button is pressed the inbuilt LED on pin 13
- * will turn on, when released will turn off.
+ * As with the basic EventButton example, when the button is pressed the 
+ * inbuilt LED on pin 13 will turn on, when released will turn off.
+ * 
+ * By using the standard GpioPinAdapter and the VirtualPinAdapter we can 
+ * mix them with the PinMixerAdapter so every 10 seconds, the button will 
+ * be virtually pressed and then released 2 seconds later, lighting the LED 
+ * and firing PRESSED, 3 x LONG_PRESS, RELEASED and LONG_CLICKED events;
  *
- * Unlike the standard Examples->Digital->Button example, our 
- * button is connected between pin 2 and GND because we 
- * use INPUT_PULLUP internally.
+ * Either source PinAdapter can interrupt the other and the GpioPinAdapter will
+ * act exactly like a normal GPIO pin.
  *
  */
 #include <EventButton.h>
+#include "PinAdapter/GpioPinAdapter.h"
+#include "PinAdapter/VirtualPinAdapter.h"
+#include "PinAdapter/PinMixerAdapter.h"
+
 
 const uint8_t buttonPin = 2;  // the number of the pushbutton pin
 const uint8_t ledPin = 13;    // the number of the LED pin
@@ -83,10 +91,12 @@ void onButtonEvent(InputEventType et, EventButton& eb) {
   Serial.println();
 }
 
+VirtualPinAdapter virtualPin; //Create gloablly so we can access it
+//Create an EventPutton with a mixed GPIO pin and a virtual pin
+EventButton myButton(new PinMixerAdapter(new GpioPinAdapter(buttonPin), &virtualPin));
 
-EventButton myButton(buttonPin); // Create an EventButton and the default debouncer
-//EventButton myButton(buttonPin, false); // Will create an EventButton without default debouncer
-
+uint32_t lastVirtualPressMs = 0; //Timer for example
+bool pressed = false; //we have virtually pressed
 
 void setup() {
   Serial.begin(9600);
@@ -103,4 +113,15 @@ void loop() {
   // This will update the state of the button and 
   // fire the appropriate events.
   myButton.update();
+
+  uint32_t now = millis();
+  if ( now > lastVirtualPressMs + 10000 ) {
+    lastVirtualPressMs = now;
+    virtualPin.press();
+    pressed = true;
+  }
+  if ( pressed && now > lastVirtualPressMs + 2000 ) {
+    virtualPin.release();
+    pressed = false;
+  }
 }
