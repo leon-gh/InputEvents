@@ -1,10 +1,8 @@
 # EventButton Class
 
-The [`EventButton`](EventButton.md) class is for momentary inputs. The momentary switch (button) must be wired between the pin and GND.
+The [`EventButton`](EventButton.md) class is for momentary inputs. The momentary switch (button) is normally wired between the pin and GND, but this can be changed with the `setPressedState()` method and changing the pullup type for the pin.
 
-`EventButton` is probably the easiest way to implement a button - a single function and three lines of code gives you information on all types of user inputs as detailed in the [Event Types](#event-types) below.
-
-It is effectively an event wrapper for Thomas Fredericks' [Bounce2 library](https://github.com/thomasfredericks/Bounce2) - huge thanks to the Thomas - I am standing on the shoulders of giants.
+`EventButton` is probably the easiest way to implement a button - a single function and four lines of code gives you information on all types of user inputs as detailed in the [Event Types](InputEventTypes.md).
 
 ![button](../images/button.jpg)
 
@@ -13,25 +11,27 @@ It is effectively an event wrapper for Thomas Fredericks' [Bounce2 library](http
 
 ```cpp
 #include <EventButton.h>
-// Create a EventButton input.
-EventButton myButton(19);
 // Create a callback handler function
 void onButtonEvent(InputEventType et, EventButton& eb) {
     Serial.print("Button event fired.");
 }
+// Create a EventButton input.
+EventButton myButton(19);             //<-- Line one.
 void setup() {
   Serial.begin(9600);
-  myButton.begin();
+  myButton.begin();                   //<-- Line two.
   delay(500);
   //Link the event(s) to your function
-  myButton.setCallback(onButtonEvent);
+  myButton.setCallback(onButtonEvent); //<-- Line three.
 }
 void loop() {
-    // Call 'update' for every EventAnalog
-  myButton.update();
+    // Update button
+  myButton.update();                   //<-- Line four.
 }
 ```
 See [example Button.ino](../examples/Button/Button.ino) for a slightly more detailed sketch.
+
+Since v1.4.0, the `EventButton` can use 'virtual pins' via the `PinAdapter`. You don't need to worry about these unless you're using a GPIO expander, doing testing or something else that doesn't involve regular GPIO pins!.
 
 ## API Docs
 

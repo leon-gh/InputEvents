@@ -9,6 +9,7 @@
 #### [EventEncoderButton](EventEncoderButton.md)
 #### [EventJoystick](EventJoystick.md)
 #### [EventSwitch](EventSwitch.md)
+#### [All InputEventTypes](InputEventTypes.md)
 
 ----
 
@@ -23,7 +24,7 @@ Since v1.2.1, you can use almost any encoder library via an [EncoderAdapter](htt
 
 Currently an adapter is provided for PJRC's Encoder but more will be added or you can write your own.
 
-See the [PJRC one](https://github.com/Stutchbury/EncoderAdapter/blob/main/src/PjrcEncoderAdapter.cpp) as an example of how simple it is! If you want to share your adapter, I will add it the the EncoderAdapter library.
+See the [PJRC one](https://github.com/Stutchbury/EncoderAdapter/blob/main/src/PjrcEncoderAdapter.cpp) as an example of how simple it is! If you want to share your adapter, I will add it the the EncoderAdapter library. Pull requests are welcome!
 
 These changes mean that rather than passing the encoder pins to the `EventEncoder` or `EventEncoderButton` constructors, we pass an EncoderAdapter that has been previously constructed from the pins.
 
