@@ -69,7 +69,7 @@ public:
 
     ///@{
     /** 
-     * @name Constructor
+     * @name Constructors
      */
     /**
      * @brief Construct an EventEncoderButton input from an [EncoderAdapter](https://github.com/Stutchbury/EncoderAdapter) and a pin.
@@ -81,7 +81,25 @@ public:
      * @param encoderAdapter Pass a previously created [EncoderAdapter](https://github.com/Stutchbury/EncoderAdapter) by reference.
      * @param buttonPin The pin for the button
      */
-    EventEncoderButton(EncoderAdapter *encoderAdapter, byte buttonPin);
+    EventEncoderButton(EncoderAdapter *encoderAdapter, byte buttonPin, bool useDefaultDebouncer=true);
+
+    /**
+     * @brief Construct a new EventButton with a PinAdapter and optionally use the default debouncer
+     * 
+     * @param encoderAdapter Pass a previously created [EncoderAdapter](https://github.com/Stutchbury/EncoderAdapter) by reference.
+     * @param pinAdapter 
+     */
+    EventEncoderButton(EncoderAdapter *encoderAdapter, PinAdapter* _pinAdapter, bool useDefaultDebouncer=true);
+
+    /**
+     * @brief Construct a new EventButton with a PinAdapter and a DebounceAdapter
+     * 
+     * @param encoderAdapter Pass a previously created [EncoderAdapter](https://github.com/Stutchbury/EncoderAdapter) by reference.
+     * @param pinAdapter 
+     * @param debounceAdapter 
+     */
+    EventEncoderButton(EncoderAdapter *encoderAdapter, PinAdapter* _pinAdapter, DebounceAdapter* debounceAdapter);
+
     ///@}
 
     ///@{ 
@@ -142,6 +160,7 @@ public:
      * @details *Must* be called from within <code>loop()</code>
      */
     void update();
+
     ///@}
 
     ///@{
@@ -192,25 +211,19 @@ public:
     bool isPressed();
 
     /**
-     * @brief Directly get the duration of the button current state from Bounce2
+     * @brief Duration in milliseconds of the current button state
      * 
      * @return Current state duration in milliseconds
      */
     uint32_t currentDuration();
 
     /**
-     * @brief Directly get the duration of the button previous state from Bounce2
+     * @brief Duration in milliseconds of the previous button state
      * 
      * @return Previous state duration in milliseconds
      */
     uint32_t previousDuration();
 
-    /**
-     * @brief Get the button state as reported by Bounce2
-     * 
-     * @return HIGH or LOW
-     */
-    bool buttonState();
     ///@}
 
     ///@{
@@ -358,7 +371,7 @@ public:
      * 
      * @param longDurationMs Default 750ms
      */
-    void setLongClickDuration(unsigned int longDurationMs=750);
+    void setLongClickDuration(uint16_t longDurationMs=750);
 
     /**
      * @brief Set the number of milliseconds that define the *subbsequent* long click intervals.
@@ -366,21 +379,40 @@ public:
     * 
      * @param intervalMs The interval in milliseconds (default is 500ms).
      */
-    void setLongPressInterval(unsigned int intervalMs=500);
+    void setLongPressInterval(uint16_t intervalMs=500);
 
     /**
      * @brief Set the multi click interval.
      * 
      * @param intervalMs The interval in milliseconds between double, triple or multi clicks
      */
-    void setMultiClickInterval(unsigned int intervalMs=250);
+    void setMultiClickInterval(uint16_t intervalMs=250);
 
     /**
-     * @brief Set the Bounce2 debounce interval.
-     * 
-     * @details Default in the Bounce2 library is 10ms
+     * @brief Set the debouncer.
+     * **Note:** When planning to use `setDebouncer()` you must ensure `useDefaultDebouncer` is set to `false` in the button or switch constructor. *Previously set debouncers are not deleted*.     * 
+     * @param debounceAdapter 
      */
-    void setDebounceInterval(unsigned int intervalMs=10);
+    void setDebouncer(DebounceAdapter* debounceAdapter);
+
+    /**
+     * @brief Set the DebounceAdapter debounce interval. Default is 10ms
+     * 
+     * @return true If the debounce interval has been updated
+     * @return false If the debouncer interval has not been updated (ie no debouncer set)
+     */
+    bool setDebounceInterval(uint16_t intervalMs=10);
+
+    /**
+     * @brief Set the pin state that represents 'pressed' for the button. By default this is `LOW` (ie pulled down for pressed).
+     * 
+     * @details If you set this value to `HIGH`, you must also pass `INPUT_PULLDOWN` to the GpioPinAdapter constructor. 
+     * 
+     * If your board does not support `INPUT_PULLDOWN`, pass `INPUT` and use an external resistor.
+     * 
+     * @param state Either LOW (default) or HIGH
+     */
+    void setPressedState(bool state = LOW);
     ///@}
 
 protected:
@@ -416,6 +448,7 @@ private:
     int32_t maxPressedPos=0;
     bool wrapMinMaxPressedPos = false;
 
+    void setCallbacks();
     bool onEncoderChanged();
 
 /// \cond DO_NOT_DOCUMENT

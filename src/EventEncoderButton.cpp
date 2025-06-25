@@ -12,19 +12,32 @@
 #ifndef EXCLUDE_EVENT_ENCODER
 
 
-EventEncoderButton::EventEncoderButton(EncoderAdapter *encoderAdapter, byte buttonPin)
-    : encoder(encoderAdapter), button(buttonPin) {
-        #ifdef FUNCTIONAL_SUPPORTED
-        encoder.setCallback([&](InputEventType et, EventEncoder &enc) { onInputCallback(et, enc); });
-        button.setCallback([&](InputEventType et, EventButton &btn) { onInputCallback(et, btn); });
-        #else
-        encoder.setOwner(this);
-        encoder.setCallback(EventEncoderButton::encoderCallback);
-        button.setOwner(this);
-        button.setCallback(EventEncoderButton::buttonCallback);
-        #endif
-
+EventEncoderButton::EventEncoderButton(EncoderAdapter *encoderAdapter, byte buttonPin, bool useDefaultDebouncer /*=true*/)
+    : encoder(encoderAdapter), button(buttonPin, useDefaultDebouncer) {
+        setCallbacks();
     }
+
+EventEncoderButton::EventEncoderButton(EncoderAdapter *encoderAdapter, PinAdapter* _pinAdapter, bool useDefaultDebouncer /*=true*/)
+    : encoder(encoderAdapter), button(_pinAdapter, useDefaultDebouncer) {
+        setCallbacks();
+    }
+
+EventEncoderButton::EventEncoderButton(EncoderAdapter *encoderAdapter, PinAdapter* _pinAdapter, DebounceAdapter* debounceAdapter)
+    : encoder(encoderAdapter), button(_pinAdapter, debounceAdapter) {
+        setCallbacks();
+    }
+
+void EventEncoderButton::setCallbacks() {
+    #ifdef FUNCTIONAL_SUPPORTED
+    encoder.setCallback([&](InputEventType et, EventEncoder &enc) { onInputCallback(et, enc); });
+    button.setCallback([&](InputEventType et, EventButton &btn) { onInputCallback(et, btn); });
+    #else
+    encoder.setOwner(this);
+    encoder.setCallback(EventEncoderButton::encoderCallback);
+    button.setOwner(this);
+    button.setCallback(EventEncoderButton::buttonCallback);
+    #endif
+}
 
 void EventEncoderButton::begin() {
     encoder.begin();
@@ -40,7 +53,6 @@ void EventEncoderButton::update() {
     encoder.update();
     button.update();
 }
-
 
 void EventEncoderButton::invoke(InputEventType et) {
     if ( isInvokable(et) ) {
@@ -59,7 +71,6 @@ void EventEncoderButton::onDisabled() {
     button.enable(false);
     invoke(InputEventType::DISABLED);
 }
-
 
 void EventEncoderButton::onInputCallback(InputEventType et, EventInputBase & ie) {
     //Only fire ENABLED and DISABLED events from EventEncoderButton
@@ -136,7 +147,6 @@ bool EventEncoderButton::onEncoderChanged() {
     return (currentIncrement != 0);
 }
 
-
 void EventEncoderButton::setMinPosition(int32_t minPosition) { 
     minPos = minPosition;
     if ( currentPosition < minPos ) {
@@ -175,19 +185,21 @@ void EventEncoderButton::setPositionDivider(uint8_t divider /*=4*/) { encoder.se
 
 uint8_t EventEncoderButton::getPositionDivider() {return encoder.getPositionDivider(); }
 
-bool EventEncoderButton::buttonState() { return  button.buttonState(); }
-
 bool EventEncoderButton::isPressed() { return button.isPressed(); }
 
-void EventEncoderButton::setDebounceInterval(unsigned int intervalMs) { button.setDebounceInterval(intervalMs); }
+void EventEncoderButton::setDebouncer(DebounceAdapter* debounceAdapter) { button.setDebouncer(debounceAdapter); }
 
-void EventEncoderButton::setMultiClickInterval(unsigned int intervalMs) { button.setMultiClickInterval(intervalMs); }
+bool EventEncoderButton::setDebounceInterval(uint16_t intervalMs) { return button.setDebounceInterval(intervalMs); }
 
-void EventEncoderButton::setLongClickDuration(unsigned int longDurationMs) { button.setLongClickDuration(longDurationMs); }
+void EventEncoderButton::setPressedState(bool state /*= LOW*/) { button.setPressedState(state); }
+
+void EventEncoderButton::setMultiClickInterval(uint16_t intervalMs) { button.setMultiClickInterval(intervalMs); }
+
+void EventEncoderButton::setLongClickDuration(uint16_t longDurationMs) { button.setLongClickDuration(longDurationMs); }
 
 void EventEncoderButton::enableLongPressRepeat(bool repeat /*=true*/) { button.enableLongPressRepeat(repeat); }
 
-void EventEncoderButton::setLongPressInterval(unsigned int intervalMs) { button.setLongPressInterval(intervalMs); }
+void EventEncoderButton::setLongPressInterval(uint16_t intervalMs) { button.setLongPressInterval(intervalMs); }
 
 unsigned char EventEncoderButton::clickCount() { return button.clickCount(); }
 

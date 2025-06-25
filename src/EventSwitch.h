@@ -11,10 +11,8 @@
 
 #include "Arduino.h"
 #include "EventInputBase.h"
-
-#ifndef Bounce2_h
-    #include <Bounce2.h>
-#endif
+#include "PinAdapter/FoltmanDebounceAdapter.h"
+#include "PinAdapter/GpioPinAdapter.h"
 
 /**
  * @brief The EventSwitch class is for standard on/off inputs. Like the EventButton the switch must be wired between the pin and GND. 
@@ -64,14 +62,31 @@ public:
 
     ///@{ 
     /** 
-     * @name Constructor 
+     * @name Constructors 
      */
     /**
      * @brief Construct an EventSwitch input
      * 
      * @param switchPin A pin that connects to GNG via the switch
      */
-    EventSwitch(byte switchPin);
+    EventSwitch(byte switchPin, bool useDefaultDebouncer=true);
+
+    /**
+     * @brief Construct a new EventSwitch with a PinAdapter and optionally use the default debouncer
+     * 
+     * @param pinAdapter 
+     */
+    EventSwitch(PinAdapter* _pinAdapter, bool useDefaultDebouncer=true);
+
+    /**
+     * @brief Construct a new EventSwitch with a PinAdapter and a DebounceAdapter
+     * 
+     * @param pinAdapter 
+     * @param debounceAdapter 
+     */
+    EventSwitch(PinAdapter* _pinAdapter, DebounceAdapter* debounceAdapter);
+
+
     ///@}
 
     ///@{ 
@@ -142,30 +157,30 @@ public:
      */
 
     /**
-     * @brief Return true if switch is on. Takes reverseOnOff() into account.
+     * @brief Return true if switch is on.
      * 
      * @return true  Switch is deemed ON.
      * @return false  Switch is deemed OFF.
      */
-    bool isOn() { return ((currentState == LOW) ^ reversed); }
+    bool isOn() { return currentState == onState; }
 
     /**
-     * @brief Return true if switch is off. Takes reverseOnOff() into account.
+     * @brief Return true if switch is off.
      * 
      * @return true Switch is deemed OFF.
      * @return false  Switch is deemed ON.
      */
-    bool isOff() { return ((currentState == HIGH) ^ reversed); }
+    bool isOff() { return currentState != onState; }
 
     /**
-     * @brief Directly get the duration of the switch current state from Bounce2
+     * @brief Duration in milliseconds of the current state
      */
     unsigned long currentDuration();
 
     /**
-     * @brief Directly get the duration of the switch previous state from Bounce2
+     * @brief Duration in milliseconds of the previous state
      */
-    unsigned long previousDuration();
+    unsigned long previousDuration() { return durationOfPreviousState; }
     ///@}
 
 
@@ -173,36 +188,94 @@ public:
     /**
      * @name Other Configuration Settings
      */
+    /**
+     * @brief Set the debouncer.
+     * **Note:** When planning to use `setDebouncer()` you must ensure `useDefaultDebouncer` is set to `false` in the button or switch constructor. *Previously set debouncers are not deleted*.
+     * 
+     * @param debounceAdapter 
+     */
+    void setDebouncer(DebounceAdapter* debounceAdapter);
 
     /**
-     * @brief Reverse the On/OFF behaviour
+     * @brief Set the DebounceAdapter debounce interval. Default is 10ms
      * 
-     * @param rev pass true to reverse ON/OFF and false to return to default behaviour.
+     * @return true If the debounce interval has been updated
+     * @return false If the debouncer interval has not been updated (ie no debouncer set)
      */
-    void reverseOnOff(bool rev=true) { reversed = rev; }
+    bool setDebounceInterval(unsigned int intervalMs=10);
 
     /**
-     * @brief Returns true if reverseOnOff() has bee set to true.
+     * @brief Set the pin state that represents 'on'. By default this is `LOW` (ie pulled down).
      * 
-     */
-    bool isOnOffReversed() { return reversed; }
-
-
-    /**
-     * @brief Set the Bounce2 debounce interval.
+     * @details If you set this value to `HIGH`, you must also pass `INPUT_PULLDOWN` to the GpioPinAdapter constructor. 
      * 
-     * @details Default in the Bounce2 library is 10ms
+     * If your board does not support `INPUT_PULLDOWN`, pass `INPUT` and use an external resistor.
+     * 
+     * @param state Either LOW (default) or HIGH
      */
-    void setDebounceInterval(unsigned int intervalMs);
+    void setOnState(bool state = LOW) { onState = state; }
     ///@}
+
+    protected:
+    /**
+     * @brief Returns true if pinAdapter changed the switch state
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool changedState();
+
+    /**
+     * @brief Returns true if pinAdapter read() has changed since last call
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool changedPinState();
+
+    /**
+     * @brief Change the switch state and flag as changed
+     * 
+     * @param newState 
+     */
+    void changeState(bool newState);
+
+    /**
+     * @brief Returns true if state has changed and previous state is onState
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool turningOff() { return stateChanged && previousState == onState; }
+    
+    /**
+     * @brief Returns true if state has changed and previous state is not onState
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool turningOn() { return stateChanged && previousState != onState; }
+
 
 private:
 
-    byte switchPin;
-    Bounce* bounce;
+    PinAdapter* pinAdapter;
+    DebounceAdapter* debouncer;
+
+    bool onState = LOW; //The state that represents 'pressed'
+
     unsigned char currentState = HIGH;
-    bool previousState = LOW;
-    bool reversed = false;
+    bool previousState = HIGH;
+
+    bool currentPinState = HIGH;
+    bool previousPinState = HIGH;
+
+    bool stateChanged = false;
+    uint32_t stateChangeLastTime;
+    uint32_t durationOfPreviousState;
+    
+
+
 };
 
 #endif

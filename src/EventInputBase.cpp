@@ -62,7 +62,7 @@ bool EventInputBase::isEventAllowed(InputEventType et) {
 
 bool EventInputBase::isInvokable(InputEventType et) {
     if ( callbackIsSet && isEventAllowed(et) ) {
-        if ( et > InputEventType::IDLE ) { //Check if exent is not ENABLE, DISABLED or IDLE
+        if ( et > InputEventType::IDLE ) { //Check if exent is not NONE, ENABLE, DISABLED or IDLE
             resetIdleTimer();    
         }
         return true;

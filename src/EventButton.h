@@ -10,10 +10,8 @@
 
 #include "Arduino.h"
 #include "EventInputBase.h"
-
-#ifndef Bounce2_h
-    #include <Bounce2.h>
-#endif
+#include "PinAdapter/FoltmanDebounceAdapter.h"
+#include "PinAdapter/GpioPinAdapter.h"
 
 /**
  * @brief The EventButton class is for momentary inputs. The momentary switch (button) must be wired between the pin and GND.
@@ -60,14 +58,30 @@ class EventButton : public EventInputBase {
 
     ///@{ 
     /** 
-     * @name Constructor 
+     * @name Constructors
      */
     /**
-     * @brief Construct an EventButton
+     * @brief Construct an EventButton with a GPIO pin
      * 
-     * @param buttonPin Any type of pin. Button contact must pull down to to GND when pressed.
+     * @param buttonPin Any type of pin and optionally use the default debouncer (default true). By default button contact should pull down to to GND when pressed. This behaviour can be reversed with setPressedState()
      */
-    EventButton(byte buttonPin);
+    EventButton(byte buttonPin, bool useDefaultDebouncer=true);
+
+    /**
+     * @brief Construct a new EventButton with a PinAdapter and optionally use the default debouncer
+     * 
+     * @param pinAdapter 
+     */
+    EventButton(PinAdapter* _pinAdapter, bool useDefaultDebouncer=true);
+
+    /**
+     * @brief Construct a new EventButton with a PinAdapter and a DebounceAdapter
+     * 
+     * @param pinAdapter 
+     * @param debounceAdapter 
+     */
+    EventButton(PinAdapter* _pinAdapter, DebounceAdapter* debounceAdapter);
+
     ///@}
 
 
@@ -129,7 +143,9 @@ class EventButton : public EventInputBase {
      * @details *Must* be called from within <code>loop()</code>
      */
     void update();
+
     ///@}
+
 
     ///@{
     /**
@@ -147,39 +163,33 @@ class EventButton : public EventInputBase {
 
     /**
      * @brief The number of times the long press has occurred during a button press. 
-     * @details This is oncremented even if the setLongPressRepeat is false, so can be read in the LONC_CLICKED event. This is reset to zero after `LONG_CLICKED` is fired.
+     * @details This is incremented even if the setLongPressRepeat is false, so can be read in the LONC_CLICKED event. This is reset to zero after `LONG_CLICKED` is fired.
 
      * @return uint8_t A count of long press occurences
      */
     uint8_t longPressCount() { return longPressCounter; }
 
     /**
-     * @brief Returns true if pressed
+     * @brief Returns true if button is currently pressed
      */
-    bool isPressed();
+    bool isPressed() { return currentState == pressedState; }
 
     /**
-     * @brief Directly get the duration of the button current state from Bounce2
+     * @brief Duration in milliseconds of the current state
      * 
      * @return Current state duration in milliseconds
      */
     uint32_t currentDuration();
 
     /**
-     * @brief Directly get the duration of the button previous state from Bounce2
+     * @brief Duration in milliseconds of the previous state
      * 
      * @return Previous state duration in milliseconds
      */
-    uint32_t previousDuration();
-
-    /**
-     * @brief Get the button state as reported by Bounce2
-     * 
-     * @return HIGH or LOW
-     */
-    bool buttonState();
+    uint32_t previousDuration()  { return durationOfPreviousState; }
 
     ///@}
+
 
     ///@{
     /**
@@ -198,7 +208,7 @@ class EventButton : public EventInputBase {
      * 
      * @param longDurationMs Default 750ms
      */
-    void setLongClickDuration(unsigned int longDurationMs=750) { longClickDuration = longDurationMs; }
+    void setLongClickDuration(uint16_t longDurationMs=750) { longClickDuration = longDurationMs; }
 
     /**
      * @brief Set the number of milliseconds that define the *subbsequent* long click intervals.
@@ -206,21 +216,42 @@ class EventButton : public EventInputBase {
     * 
      * @param intervalMs The interval in milliseconds (default is 500ms).
      */
-    void setLongPressInterval(unsigned int intervalMs=500) { longPressInterval = intervalMs; }
+    void setLongPressInterval(uint16_t intervalMs=500) { longPressInterval = intervalMs; }
 
     /**
      * @brief Set the multi click interval.
      * 
      * @param intervalMs The interval in milliseconds between double, triple or multi clicks
      */
-    void setMultiClickInterval(unsigned int intervalMs=250) { multiClickInterval = intervalMs; }
+    void setMultiClickInterval(uint16_t intervalMs=250) { multiClickInterval = intervalMs; }
 
     /**
-     * @brief Set the Bounce2 debounce interval.
+     * @brief Set the debouncer.
+     * **Note:** When planning to use `setDebouncer()` you must ensure `useDefaultDebouncer` is set to `false` in the button or switch constructor. *Previously set debouncers are not deleted*.
      * 
-     * @details Default in the Bounce2 library is 10ms
+     * @param debounceAdapter 
      */
-    void setDebounceInterval(unsigned int intervalMs=10);
+    void setDebouncer(DebounceAdapter* debounceAdapter);
+
+    /**
+     * @brief Set the DebounceAdapter debounce interval. Default is 10ms
+     * 
+     * @return true If the debounce interval has been updated
+     * @return false If the debouncer interval has not been updated (ie no debouncer set)
+     */
+    bool setDebounceInterval(uint16_t intervalMs=10);
+
+    /**
+     * @brief Set the pin state that represents 'pressed'. By default this is `LOW` (ie pulled down for pressed).
+     * 
+     * @details If you set this value to `HIGH`, you must also pass `INPUT_PULLDOWN` to the GpioPinAdapter constructor. 
+     * 
+     * If your board does not support `INPUT_PULLDOWN`, pass `INPUT` and use an external resistor.
+     * 
+     * @param state Either LOW (default) or HIGH
+     */
+    void setPressedState(bool state = LOW){ pressedState = state; }
+
     ///@}
 
 
@@ -240,14 +271,63 @@ class EventButton : public EventInputBase {
      */
     void onDisabled() override;
 
+    /**
+     * @brief Change the button state and flag as changed
+     * 
+     * @param newState 
+     */
+    void changeState(bool newState);
+
+    /**
+     * @brief Returns true if either pinAdapter, press() or release() changed the button state
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool changedState();
+
+    /**
+     * @brief Returns true if pinAdapter read() has changed since last call
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool changedPinState();
+
+    /**
+     * @brief Returns true if state has changed and previous state is pressedState
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool releasing() { return stateChanged && previousState == pressedState; }
+    
+    /**
+     * @brief Returns true if state has changed and previous state is not pressedState
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool pressing() { return stateChanged && previousState != pressedState; }
+
     private:
 
-    byte buttonPin;
-    Bounce* bounce;
+    PinAdapter* pinAdapter;
+    DebounceAdapter* debouncer;
+
+    bool pressedState = LOW; //The state that represents 'pressed'
 
     //state
-    uint8_t _buttonState = HIGH;
-    bool previousState = LOW;
+
+    bool currentPinState = HIGH;
+    bool previousPinState = HIGH;
+
+    bool currentState = HIGH; //set via PinAdapter->read()
+    bool previousState = HIGH;
+    bool stateChanged = false;
+    uint32_t stateChangeLastTime;
+    uint32_t durationOfPreviousState;
+
     uint8_t clickCounter = 0;
     uint8_t prevClickCount = 0;
     bool clickFired = true;

@@ -9,19 +9,37 @@
 #include "EventSwitch.h"
 
 
-EventSwitch::EventSwitch(byte pin)
-    : switchPin(pin), bounce(new Bounce()) { }
+EventSwitch::EventSwitch(byte pin, bool useDefaultDebouncer /*=true*/)
+    : pinAdapter(new GpioPinAdapter(pin))
+    { 
+        if ( useDefaultDebouncer ) {
+            debouncer = new FoltmanDebounceAdapter(pinAdapter);
+        }
+    }
 
+EventSwitch::EventSwitch(PinAdapter* _pinAdapter, bool useDefaultDebouncer /*=true*/)
+    : pinAdapter(_pinAdapter) 
+    { 
+        if ( useDefaultDebouncer ) {
+            debouncer = new FoltmanDebounceAdapter(pinAdapter);
+        }
+    }
+
+EventSwitch::EventSwitch(PinAdapter* _pinAdapter, DebounceAdapter* debounceAdapter) 
+    : pinAdapter(_pinAdapter),
+      debouncer(debounceAdapter)
+    { 
+        debouncer->setPinAdapter(pinAdapter);
+    }
+
+    
 void EventSwitch::begin() {
-    pinMode(switchPin, INPUT_PULLUP); //Set pullup first
-    // Top tip From PJRC's Encoder - without this delay the
-    // long-press doesn't fire on first press.
-    // allow time for a passive R-C filter to charge
-    // through the pullup resistors, before reading
-    // the initial state
-    delayMicroseconds(2000); //Delay
-    bounce->attach(switchPin, INPUT_PULLUP); //then attach button
-    currentState = bounce->read(); //Initialise switch state from Bounce2
+    pinAdapter->begin();
+    if ( debouncer ) {
+        debouncer->begin();
+    }
+    changedState(); //Use to read/set inital state
+    stateChanged = false;
 }
 
 void EventSwitch::unsetCallback() {
@@ -31,15 +49,15 @@ void EventSwitch::unsetCallback() {
 
 void EventSwitch::update() {
     if (_enabled) {
-        if (bounce->update()) {
-            currentState = bounce->read();
-            if (bounce->fell()) {
-                previousState = HIGH;
-                invoke(reversed ? InputEventType::OFF :InputEventType::ON);
-            } else if (bounce->rose()) {
-                invoke(reversed ? InputEventType::ON :InputEventType::OFF);
-                previousState = LOW;
+        if (changedState()) {
+            if (turningOn()) {
+                //previousState = HIGH;
+                invoke(InputEventType::ON);
+            } else if (turningOff()) {
+                invoke(InputEventType::OFF);
+                //previousState = LOW;
             }
+            stateChanged = false;
         }
         EventInputBase::update();
     }
@@ -51,10 +69,46 @@ void EventSwitch::invoke(InputEventType et) {
     }    
 }
 
+void EventSwitch::setDebouncer(DebounceAdapter* debounceAdapter) {
+    debouncer = debounceAdapter;
+    if (debouncer) { //Can pass nullptr to unset?
+        debouncer->setPinAdapter(pinAdapter);
+        debouncer->begin();
+    }
+}
 
-void EventSwitch::setDebounceInterval(unsigned int intervalMs) { bounce->interval(intervalMs); }
+bool EventSwitch::changedState() {
+    if ( debouncer ) {
+        currentPinState = debouncer->read();
+    } else {
+        currentPinState = pinAdapter->read();
+    }
+    if ( changedPinState() && currentPinState != currentState ) {
+            changeState(currentPinState);
+    }
+    return stateChanged;
+}
 
-unsigned long EventSwitch::currentDuration() { return bounce->currentDuration(); }
+bool EventSwitch::changedPinState() {
+    if ( currentPinState == previousPinState ) return false;
+    previousPinState = currentPinState;
+    return true;
+}
 
-unsigned long EventSwitch::previousDuration() { return bounce->previousDuration(); }
+void EventSwitch::changeState(bool newState) {
+    previousState = currentState;
+    currentState = newState;
+    stateChanged = true;
+    durationOfPreviousState = millis() - stateChangeLastTime;
+    stateChangeLastTime = millis();
+}
 
+bool EventSwitch::setDebounceInterval(unsigned int intervalMs) { 
+    if ( debouncer ) {
+        debouncer->setDebounceInterval(intervalMs);
+        return true;
+    }
+    return false;
+}
+
+uint32_t EventSwitch::currentDuration() { return (millis() - stateChangeLastTime); }

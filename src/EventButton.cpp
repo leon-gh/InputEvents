@@ -9,18 +9,36 @@
 #include "EventButton.h"
 
 
-EventButton::EventButton(byte pin)
-    : buttonPin(pin), bounce(new Bounce()) { }
+EventButton::EventButton(byte pin, bool useDefaultDebouncer /*=true*/)
+    : pinAdapter(new GpioPinAdapter(pin))
+    { 
+        if ( useDefaultDebouncer ) {
+            debouncer = new FoltmanDebounceAdapter(pinAdapter);
+        }
+    }
+
+EventButton::EventButton(PinAdapter* _pinAdapter, bool useDefaultDebouncer /*=true*/)
+    : pinAdapter(_pinAdapter) 
+    { 
+        if ( useDefaultDebouncer ) {
+            debouncer = new FoltmanDebounceAdapter(pinAdapter);
+        }
+    }
+
+EventButton::EventButton(PinAdapter* _pinAdapter, DebounceAdapter* debounceAdapter) 
+    : pinAdapter(_pinAdapter),
+      debouncer(debounceAdapter)
+    { 
+        debouncer->setPinAdapter(pinAdapter);
+    }
 
 void EventButton::begin() {
-    pinMode(buttonPin, INPUT_PULLUP); //Set pullup first
-    // Top tip From PJRC's Encoder - without this delay the
-    // long-press doesn't fire on first press.
-    // allow time for a passive R-C filter to charge
-    // through the pullup resistors, before reading
-    // the initial state
-    delayMicroseconds(2000); //Delay
-    bounce->attach(buttonPin, INPUT_PULLUP); //then attach button
+    pinAdapter->begin();
+    if ( debouncer ) {
+        debouncer->begin();
+    }
+    changedState(); //Use to read/set inital state
+    stateChanged = false;
 }
 
 void EventButton::unsetCallback() {
@@ -31,27 +49,21 @@ void EventButton::unsetCallback() {
 void EventButton::update() {
     if (_enabled) {
         //button update (fires pressed/released callbacks)
-        if (bounce->update()) {
-            _buttonState = bounce->read();
-            if (bounce->fell()) {
-                previousState = HIGH;
-                //onPressed();
+        if ( changedState() ) {
+            if (pressing()) {
                 invoke(InputEventType::PRESSED);
-
-            } else if (bounce->rose()) {
-                if (previousState == HIGH) { //Why would previousState *not* be high?
-                    clickFired = false;
-                    clickCounter++;
-                    prevClickCount = clickCounter;
-                }
-                previousState = LOW;
+            } else if (releasing()) {
+                clickFired = false;
+                clickCounter++;
+                prevClickCount = clickCounter;
                 invoke(InputEventType::RELEASED);
             }
+            stateChanged = false;
         }
         //fire long press callbacks
-        if (LOW == bounce->read()) {
+        if (currentState == pressedState) {
             resetIdleTimer();
-            if (bounce->currentDuration() > (uint16_t)(longClickDuration + (longPressCounter * longPressInterval ))) {
+            if (currentDuration() > (uint16_t)(longClickDuration + (longPressCounter * longPressInterval ))) {
                 longPressCounter++;
                 if ((repeatLongPress || longPressCounter == 1) ) {
                     invoke(InputEventType::LONG_PRESS);
@@ -59,9 +71,9 @@ void EventButton::update() {
             }
         }
         //fire button click callbacks
-        if (!clickFired && _buttonState == HIGH && bounce->currentDuration() > multiClickInterval) {
+        if (!clickFired && currentState != pressedState && currentDuration() > multiClickInterval) {
             clickFired = true;
-            if (bounce->previousDuration() > longClickDuration) {
+            if (previousDuration() > longClickDuration) {
                 clickCounter = 0;
                 prevClickCount = 1;
                 invoke(InputEventType::LONG_CLICKED);
@@ -95,13 +107,47 @@ void EventButton::onDisabled() {
     invoke(InputEventType::DISABLED);
 }
 
+bool EventButton::changedState() {
+    if ( debouncer ) {
+        currentPinState = debouncer->read();
+    } else {
+        currentPinState = pinAdapter->read();
+    }
+    if ( changedPinState() && currentPinState != currentState ) {
+            changeState(currentPinState);
+    }
+    return stateChanged;
+}
 
-bool EventButton::buttonState() { return bounce->read(); }
+bool EventButton::changedPinState() {
+    if ( currentPinState == previousPinState ) return false;
+    previousPinState = currentPinState;
+    return true;
+}
 
-bool EventButton::isPressed() { return buttonState() == LOW; }
 
-void EventButton::setDebounceInterval(unsigned int intervalMs) { bounce->interval(intervalMs); }
+void EventButton::changeState(bool newState) {
+    previousState = currentState;
+    currentState = newState;
+    stateChanged = true;
+    durationOfPreviousState = millis() - stateChangeLastTime;
+    stateChangeLastTime = millis();
+}
 
-uint32_t EventButton::currentDuration() { return bounce->currentDuration(); }
+void EventButton::setDebouncer(DebounceAdapter* debounceAdapter) {
+    debouncer = debounceAdapter;
+    if (debouncer) { //Can pass nullptr to unset?
+        debouncer->setPinAdapter(pinAdapter);
+        debouncer->begin();
+    }
+}
 
-uint32_t EventButton::previousDuration() { return bounce->previousDuration(); }
+bool EventButton::setDebounceInterval(uint16_t intervalMs) { 
+    if ( debouncer ) {
+        debouncer->setDebounceInterval(intervalMs);
+        return true;
+    }
+    return false;
+}
+
+uint32_t EventButton::currentDuration() { return (millis() - stateChangeLastTime); }
