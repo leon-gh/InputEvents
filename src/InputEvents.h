@@ -47,7 +47,7 @@ constexpr auto DISABLED=ACTUAL_DISABLED_VALUE;
  * @brief The size of the InputEventType enum
  * 
  */
-constexpr size_t NUM_EVENT_TYPE_ENUMS = 19;
+constexpr size_t NUM_EVENT_TYPE_ENUMS = 20;
 
 /**
  * @brief A list of all events that can be fired by InputEvents classes.
