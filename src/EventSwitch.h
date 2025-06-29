@@ -175,12 +175,12 @@ public:
     /**
      * @brief Duration in milliseconds of the current state
      */
-    unsigned long currentDuration();
+    uint32_t currentDuration();
 
     /**
      * @brief Duration in milliseconds of the previous state
      */
-    unsigned long previousDuration() { return durationOfPreviousState; }
+    uint32_t previousDuration() { return durationOfPreviousState; }
     ///@}
 
 
