@@ -19,34 +19,30 @@ class HC165ExpanderAdapter : public GpioExpanderAdapter {
     static const int cascadeMaxLength = 4;     // max number of 74HC164 supported by this implementation
     static const int piPinCount = 8;           // number of parallel input pins
   public:
-    HC165ExpanderAdapter(byte dataPin, byte clockPin, byte shldPin, byte cascadeLength = cascadeDefaultLength,
-                         bool updateOnRead = false)
-        : dataPin(dataPin), clockPin(clockPin), shldPin(shldPin), initialized(false), cascadeLength(cascadeLength),
-          updateOnRead(updateOnRead) {
-        cascadeLength = cascadeLength > cascadeMaxLength ? cascadeMaxLength : cascadeLength;
-    }
+    HC165ExpanderAdapter(byte dataPin, byte clockPin, byte shldPin, byte cascadeLength = cascadeDefaultLength)
+        : dataPin(dataPin), 
+          clockPin(clockPin), 
+          shldPin(shldPin), 
+          cascadeLength(cascadeLength)
+        {
+            cascadeLength = cascadeLength > cascadeMaxLength ? cascadeMaxLength : cascadeLength;
+        }
 
     /**
      * @brief Initialize the pin expander.
      *
      */
-    void begin() {
-        if (initialized)
-            return;
-
+    void begin() override {
         pinMode(dataPin, INPUT);
         pinMode(clockPin, OUTPUT);
         pinMode(shldPin, OUTPUT);
-
-        initialized = true;
     }
 
     /**
      * @brief Read the state of pins on the 74HC165 cascade
      *
-     * @return pin state packed in 32-bits
      */
-    void update() {
+    void update() override {
         // Step 1: Sample
         digitalWrite(shldPin, LOW);
         digitalWrite(shldPin, HIGH);
@@ -65,21 +61,32 @@ class HC165ExpanderAdapter : public GpioExpanderAdapter {
         }
     }
 
-    // not supported by 74HC165
-    void attachPin(byte pin, int mode = INPUT_PULLUP) {}
+    /**
+     * @brief Returns the state of a pin on the expander
+     *
+     * @return true/HIGH
+     * @return false/LOW
+     */
+    bool read(byte pin) override {
+        return bitRead(pins, pin);
+    }
 
-    // not supported by 74HC165
-    void attachPin(PinAdapter *pin) {}
+    /**
+     * @brief  pinMode not supported by 74HC165 so do nothing
+     * 
+     * @param pin 
+     * @param mode 
+     */
+    void attachPin(byte pin, int mode = INPUT_PULLUP) override {}
 
     ~HC165ExpanderAdapter() {}
 
   private:
-    bool initialized;
     byte dataPin;
     byte clockPin;
     byte shldPin;
     int cascadeLength;
-    bool updateOnRead;
+    uint32_t pins = 0;
 };
 
 #endif
