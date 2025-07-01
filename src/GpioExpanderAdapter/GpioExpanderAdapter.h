@@ -37,6 +37,24 @@ class GpioExpanderAdapter {
      */
     virtual void attachPin(byte pin, int mode = INPUT_PULLUP) = 0;
 
+    /**
+     * @brief Optionally implemented by concrete `GpioExpanderAdapter`s if they support writing to pins.
+     * 
+     * @details Not used by InputEvents but provided so 'app' code can write to the GPIO expander.
+     * 
+     * @param pin The pin number on the expander
+     * @param state HIGH or LOW (true/false)
+     */
+    void write(byte pin, bool state) {}
+
+    /**
+     * @brief Returns `true` if the concrete `GpioExpanderAdapter` has implemented the `write()` method.
+     * 
+     * @return true The impemented `GpioExpanderAdapter` can write to pins.
+     * @return false The default, ie unimplemented
+     */
+    bool canWrite() { return false; }
+
     virtual ~GpioExpanderAdapter() = default;
 
 };
