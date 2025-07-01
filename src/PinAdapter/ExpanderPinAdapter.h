@@ -6,7 +6,7 @@
 #include "GpioExpanderAdapter/GpioExpanderAdapter.h"
 
 /**
- * @brief Implemention of a PinAdapter that reads from a GpioExpanderAdapter
+ * @brief Implementation of a PinAdapter that reads from a GpioExpanderAdapter
  *
  */
 class ExpanderPinAdapter : public PinAdapter {
